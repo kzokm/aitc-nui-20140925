@@ -1,0 +1,73 @@
+* {
+  margin:0;
+  padding:0;
+}
+
+$backgroud-color: #f8fff8;
+
+body {
+  background-color: $backgroud-color;
+}
+
+header {
+  color: white;
+  background-color: green;
+  font-size: 32px;
+  padding: 10px;
+}
+
+#panel {
+  width: 100%;
+  padding: 0 10px 30px;
+
+  background: -webkit-gradient(
+      linear, center top, center bottom, from(green), to($backgroud-color)
+    );
+}
+
+#prices {
+  display: table;
+
+  .row {
+    display: table-row;
+  }
+
+  .cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 5px 8px;
+  }
+}
+
+.button {
+  display: table-cell;
+  width: 150px;
+  height: 80px;
+
+  font-size: 40px;
+  text-align: center;
+  vertical-align: middle;
+
+  color: white;
+  background-color: black;
+  border: 4px outset white;
+
+  &.focus {
+    background-color: red;
+  }
+}
+
+.cursor {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+}
+
+#gaze {
+  border-color: red
+}
+
+#tip {
+  border-color: blue
+}

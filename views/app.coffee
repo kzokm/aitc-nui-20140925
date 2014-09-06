@@ -1,8 +1,12 @@
 Leap?.loop (frame)->
+  html = 'Leap:<ul>'
+
   nearest = undefined
   frame.fingers.forEach (finger)->
-    z = finger.tipPosition[2]
-    if !nearest? || nearest?.tipPosition[2] < z
+    html += "<li>#{finger.type}: "
+    html += "#{finger.tipPosition[0]}, #{finger.tipPosition[1]}, #{finger.tipPosition[2]}"
+
+    if !nearest? || nearest?.tipPosition[2] > finger.tipPosition[2]
       nearest = finger
 
   if nearest?
@@ -10,6 +14,8 @@ Leap?.loop (frame)->
       .show()
   else
     tip.hide()
+
+  $('#leap-info').html html
 
 .use 'screenPosition'
 
@@ -60,12 +66,14 @@ class Cursor
         position: 'absolute'
     $('body').append @element
 
+    $('#debug').append @info = $("<div id=#{id}-info>")
+
   moveTo: (position)->
     if Array.isArray position
       [x, y] = position
     else
       {x, y} = position
-    console.log x, y
+    @info.html "#{@id}:<br>#{x}, #{y}"
     @element.css
       left: x
       top: y

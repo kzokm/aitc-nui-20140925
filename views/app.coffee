@@ -5,26 +5,28 @@ Leap?.loop (frame)->
   frame.fingers.forEach (finger)->
     html += "<li>#{finger.type}: "
     html += "#{finger.tipPosition[0]}, #{finger.tipPosition[1]}, #{finger.tipPosition[2]}"
+    html += " / #{finger.stabilizedTipPosition[0]}, #{finger.stabilizedTipPosition[1]}, #{finger.stabilizedTipPosition[2]}"
 
     if !nearest? || nearest?.tipPosition[2] > finger.tipPosition[2]
       nearest = finger
 
   if nearest?
-    tip.moveTo nearest.screenPosition()
+    norm = frame.interactionBox.normalizePoint nearest.stabilizedTipPosition
+    tipCursor.moveTo
+        x: window.innerWidth * norm[0]
+        y: window.innerHeight * (1 - norm[1])
       .show()
   else
-    tip.hide()
+    tipCursor.hide()
 
   $('#leap-info').html html
-
-.use 'screenPosition'
 
 EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
     clientPosition = frame.smoothedCoordinates.toClient()
     console.log frame.smoothedCoordinates, clientPosition
 
-    gaze.moveTo clientPosition
+    gazeCursor.moveTo clientPosition
       .show()
 
     $('#panel .button').each ->
@@ -33,7 +35,7 @@ EyeTribe?.loop (frame)->
         else
           $(@).removeClass 'focus'
   else
-    gaze.hide()
+    gazeCursor.hide()
 
 Point = EyeTribe?.Point2D
 
@@ -87,5 +89,5 @@ class Cursor
     @element.hide()
     @
 
-gaze = new Cursor 'gaze'
-tip = new Cursor 'tip'
+gazeCursor = new Cursor 'gaze'
+tipCursor = new Cursor 'tip'

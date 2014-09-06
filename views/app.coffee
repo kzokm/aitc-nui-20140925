@@ -1,4 +1,4 @@
-Leap.loop (frame)->
+Leap?.loop (frame)->
   nearest = undefined
   frame.fingers.forEach (finger)->
     z = finger.tipPosition[2]
@@ -13,7 +13,7 @@ Leap.loop (frame)->
 
 .use 'screenPosition'
 
-EyeTribe.loop (frame)->
+EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
     clientPosition = frame.smoothedCoordinates.toClient()
     console.log frame.smoothedCoordinates, clientPosition
@@ -29,17 +29,17 @@ EyeTribe.loop (frame)->
   else
     gaze.hide()
 
-Point = EyeTribe.Point2D
+Point = EyeTribe?.Point2D
 
-Point.origin = new Point window.screenX, window.screenY
+Point?.origin = new Point window.screenX, window.screenY
 
-Point.prototype.toClient = ()->
+Point?.prototype.toClient = ()->
   @subtract Point.origin
 
-Point.prototype.toScreen = ()->
+Point?.prototype.toScreen = ()->
   @add Point.origin
 
-Point.prototype.inbounds = (rect)->
+Point?.prototype.inbounds = (rect)->
   x = rect.x || rect.left
   y = rect.y || rect.top
   @x >= x &&
@@ -50,7 +50,7 @@ Point.prototype.inbounds = (rect)->
 document.onmousemove = (event)->
   clientLeft = event.screenX - event.clientX
   clientTop = event.screenY - event.clientY
-  Point.origin = new Point clientLeft, clientTop
+  Point?.origin = new Point clientLeft, clientTop
 
 
 class Cursor

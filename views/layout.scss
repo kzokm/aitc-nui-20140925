@@ -41,8 +41,8 @@ header {
 
 .button {
   display: table-cell;
-  width: 150px;
-  height: 80px;
+  width: 250px;
+  height: 120px;
 
   font-size: 40px;
   text-align: center;
@@ -53,6 +53,10 @@ header {
   border: 4px outset white;
 
   &.focus {
+    background-color: yellow;
+  }
+
+  &.selected {
     background-color: red;
   }
 }

@@ -10,16 +10,24 @@ Leap?.loop (frame)->
     if !nearest? || nearest?.tipPosition[2] > finger.tipPosition[2]
       nearest = finger
 
+  tipCursor.finger = nearest
   if nearest?
-    norm = frame.interactionBox.normalizePoint nearest.stabilizedTipPosition
-    tipCursor.moveTo
-        x: window.innerWidth * norm[0]
-        y: window.innerHeight * (1 - norm[1])
-      .show()
+    scenePosition = tipCursor.calibrator?.convert nearest.stabilizedTipPosition
+    if scenePosition?
+      tipCursor.moveTo scenePosition
+        .show()
+    else
+      scenePosition ||= frame.leapToScene nearest.stabilizedTipPosition
+      tipCursor.moveTo x: scenePosition[0], y: scenePosition[1]
+        .show()
   else
     tipCursor.hide()
 
   $('#leap-info').html html
+
+Leap?.Frame::leapToScene = (position)->
+  norm = @interactionBox.normalizePoint position
+  [ window.innerWidth * norm[0], window.innerHeight * (1 - norm[1]) ]
 
 EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
@@ -41,13 +49,13 @@ Point = EyeTribe?.Point2D
 
 Point?.origin = new Point window.screenX, window.screenY
 
-Point?.prototype.toClient = ()->
+Point?::toClient = ()->
   @subtract Point.origin
 
-Point?.prototype.toScreen = ()->
+Point?::toScreen = ()->
   @add Point.origin
 
-Point?.prototype.inbounds = (rect)->
+Point?::inbounds = (rect)->
   x = rect.x || rect.left
   y = rect.y || rect.top
   @x >= x &&
@@ -91,3 +99,8 @@ class Cursor
 
 gazeCursor = new Cursor 'gaze'
 tipCursor = new Cursor 'tip'
+
+$ ->
+  $('#calibrate').click ->
+    tipCursor.calibrator = new TouchCalibrator()
+      .start(tipCursor)

@@ -2,10 +2,10 @@ class @TouchCalibrator
   tipPositions: []
   clientPositions: []
 
-  push: (h)->
-    console.log 'push: ', h.tip, h.client
-    @tipPositions.push h.tip
-    @clientPositions.push h.client
+  push: (args)->
+    @tipPositions.push args.tip
+    @clientPositions.push args.client
+    console.log args.tip, args.client
 
     @origin =
       tip: Vector3D.average.apply Vector3D, @tipPositions
@@ -24,11 +24,31 @@ class @TouchCalibrator
       sum.y.push dC.y / dT.y if dT.y
       sum.z.push dC.z / dT.z if dT.z
 
-    if sum.x.length > 0 && sum.y.length > 0 && sum.z.length > 0
+    maxLength = Math.max sum.x.length, sum.y.length, sum.z.length
+    console.log maxLength
+    if maxLength
       @origin.d =
         x: Math.average.apply Math, sum.x
         y: Math.average.apply Math, sum.y
         z: Math.average.apply Math, sum.z
+
+      if maxLength > 5
+        do @_compress
+      console.log sum.x, sum.y, sum.z
+
+  _compress: ->
+    dMax = 0
+    dI = -1
+    for tip, i in @tipPositions
+      conv = @convert tip
+      conv.subtract @clientPositions[i]
+      d = conv.innerProduct conv
+      if d > dMax
+        dMax = d
+        dI = i
+    if dI >= 0
+      @tipPositions.splice dI, 1
+      @clientPositions.splice dI, 1
 
   convert: (tip)->
     if @origin?.d?
@@ -42,12 +62,25 @@ class @TouchCalibrator
   start: (tipCursor)->
     $('#panel .button')
       .addClass 'selected'
-      .one 'click', (event)->
-        self.push
-          tip: new Vector3D tipCursor.finger.stabilizedTipPosition
-          client: new Vector3D event.clientX, event.clientY
-        $(@).removeClass 'selected'
+      .on 'calibrate', (e, tapped)->
+        console.log @, arguments
+        if tipCursor.finger?
+          self.push
+            tip: new Vector3D tipCursor.finger.stabilizedTipPosition
+            client: new Vector3D tapped.clientX, tapped.clientY
+          $(@).removeClass 'selected'
     self = @
+
+  stop: ->
+    $('#panel .button').removeClass 'selected'
+      .off 'calibrate'
+    @
+
+$ ->
+  $('#panel')
+    .on 'click', '.button.selected', (event)->
+      $(@).triggerHandler 'calibrate', event
+
 
 Math.sum ||= ->
   sum = 0

@@ -56,11 +56,11 @@ header {
   border: 4px outset white;
 
   &.focus {
-    background-color: yellow;
+    background-color: red;
   }
 
   &.selected {
-    background-color: red;
+    background-color: #888;
   }
 }
 
@@ -77,4 +77,10 @@ header {
 
 #tip {
   border-color: blue
+}
+
+#controller {
+  .button.selected {
+    background-color: red;
+  }
 }

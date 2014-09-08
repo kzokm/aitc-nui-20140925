@@ -49,10 +49,10 @@ Point = EyeTribe?.Point2D
 
 Point?.origin = new Point window.screenX, window.screenY
 
-Point?::toClient = ()->
+Point?::toClient = ->
   @subtract Point.origin
 
-Point?::toScreen = ()->
+Point?::toScreen = ->
   @add Point.origin
 
 Point?::inbounds = (rect)->
@@ -101,6 +101,10 @@ gazeCursor = new Cursor 'gaze'
 tipCursor = new Cursor 'tip'
 
 $ ->
-  $('#calibrate').click ->
-    tipCursor.calibrator = new TouchCalibrator()
-      .start(tipCursor)
+  $calibrationButton = $('#calibrate').click ->
+    $calibrationButton.toggleClass 'selected'
+    if $calibrationButton.hasClass 'selected'
+      tipCursor.calibrator = new TouchCalibrator()
+        .start(tipCursor)
+    else
+      tipCursor.calibrator.stop()

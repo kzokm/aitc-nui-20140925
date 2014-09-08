@@ -20,6 +20,9 @@ header {
   width: 100%;
   padding: 0 10px 30px;
 
+  background: -moz-linear-gradient(
+      top, green, $backgroud-color
+    );
   background: -webkit-gradient(
       linear, center top, center bottom, from(green), to($backgroud-color)
     );

@@ -62,6 +62,12 @@ class @Vector2D
   outerProduct: (other)->
     @x * other.y - @y * other.x
 
+  norm: ->
+    Math.sqrt @innerProduct @
+
+  normalized: ->
+    @divide @norm()
+
 
 class @Vector3D extends Vector2D
   constructor: (x, y, z)->

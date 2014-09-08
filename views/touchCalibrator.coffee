@@ -34,7 +34,8 @@ class @TouchCalibrator
 
       if maxLength > 5
         do @_compress
-      console.log sum.x, sum.y, sum.z
+
+      do @_resolvSurface
 
   _compress: ->
     dMax = 0
@@ -49,6 +50,23 @@ class @TouchCalibrator
     if dI >= 0
       @tipPositions.splice dI, 1
       @clientPositions.splice dI, 1
+
+  _resolvSurface: ->
+    nTips = @tipPositions.length
+    unless nTips < 3
+      for i1 in [0 .. nTips - 3]
+        for i2 in [i1 + 1 .. nTips - 2]
+          for i3 in [i2 + 1 .. nTips - 1]
+            console.log @_getSurface @tipPositions[i1], @tipPositions[i2], @tipPositions[i3]
+
+  _getSurface: (p1, p2, p3)->
+    v1 = p2.subtract p1
+    v2 = p3.subtract p1
+    nu = (v1.outerProduct v2).normalized()
+    a: nu.x
+    b: nu.y
+    c: nu.z
+    d: -(nu.innerProduct p1)
 
   convert: (tip)->
     if @origin?.d?

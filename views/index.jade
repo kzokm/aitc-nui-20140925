@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  header お求めの金額または駅名にふれてください
+
+  #panel
+    #prices
+      - var prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
+      - var i = 0
+      - while (i < 20)
+        .row
+          - while (true)
+            .cell
+              .button= prices[i]
+            - i += 1
+            - if (i % 6 == 0) break
+
+  #controller
+    #calibrate.button Calibrate
+
+  #debug
+    #leap-info
+
+  script(src='js/vector.js')
+  script(src='js/touchCalibrator.js')
+  script(src='js/main.js')

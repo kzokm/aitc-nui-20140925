@@ -1,4 +1,6 @@
 /.*
 !.gitignore
 /vendor/bundle
+/node_modules
 /tmp
+/cache

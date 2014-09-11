@@ -1,0 +1,22 @@
+{
+  "name": "aitc-nui-20140925",
+  "version": "0.1.0",
+  "description": "NUI Ticket Vending Machine",
+  "author": "OKAMURA, Kazuhide <okamura@techlier.jp>",
+  "repository": {
+    "url": "git://github.com/kzokm/aitc-nui-20140925.git"
+  },
+  "private": true,
+  "dependencies": {
+    "coffee-middleware": "^0.2.1",
+    "coffee-script": "~1.8.0",
+    "debug": "~2.0.0",
+    "express": "~4.9.0",
+    "jade": "~1.6.0",
+    "morgan": "~1.3.0",
+    "node-sass": "^0.9.3"
+  },
+  "scripts": {
+    "start": "node bin/www"
+  }
+}

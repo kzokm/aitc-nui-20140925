@@ -113,7 +113,7 @@ $ ->
   panel = [
     price = PricePanel.appendTo '#content'
     map = RailwayMap.appendTo '#content'
-    search = undefined
+    search = StationSearch.appendTo '#content'
   ]
 
   panel.prev = ->
@@ -125,7 +125,6 @@ $ ->
   panel.set = (@current)->
     @forEach (p)-> p?.hide()
     @current?.show()
-    console.log @current, @prev(), @next()
     $('#prev').text @prev()?.name || ''
     $('#next').text @next()?.name || ''
 

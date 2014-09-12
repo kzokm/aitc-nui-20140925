@@ -2,27 +2,31 @@
   margin 0
   padding 0
 
-$backgroud-color = #f8fff8
+$backgroud-color-deep = #008000
+$backgroud-color-thin = #f8fff8
 
-body
-  background-color $backgroud-color
+#container
+  width 100%
+  height 100%
+  background-color $backgroud-color-thin
 
-header
+#message
   color white
-  background-color green
+  background-color $backgroud-color-deep
   font-size 32px
-  padding 10px
+  padding 20px
   min-height 42px
 
 #content
-  width 100%
-  padding 0 10px 30px
+  height 700px
+  padding 0 30px 30px
 
   background -moz-linear-gradient(
-      top, green, $backgroud-color
+      top, $backgroud-color-deep, $backgroud-color-thin
     )
   background -webkit-gradient(
-      linear, center top, center bottom, from(green), to($backgroud-color)
+      linear, center top, center bottom,
+      from($backgroud-color-deep), to($backgroud-color-thin)
     )
 
 #prices

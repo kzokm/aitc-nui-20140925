@@ -1,8 +1,9 @@
-class @RailwayMap
-  WIDTH: 1800
-  HEIGHT: 1300
-
+class @RailwayMap extends Panel
   name: '路線図でさがす'
+  message: '手を近づけると地図が拡大します'
+
+  WIDTH: 1700
+  HEIGHT: 700
 
   constructor: (parent)->
     map = d3.select parent
@@ -76,17 +77,9 @@ class @RailwayMap
     , @
     @
 
-  show: ->
-    @panel.show()
-    @
-
-  hide: ->
-    @panel.hide()
-    @
-
 
   @appendTo: (parent)->
-    new @ parent
+    super parent
       .drawLines ekidata.jr, line_width: 2
       .drawLines ekidata.keikyu, stations: false
       .drawLines ekidata.metro, line_width: 5

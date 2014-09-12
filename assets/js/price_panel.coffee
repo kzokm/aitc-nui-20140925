@@ -1,7 +1,6 @@
-class @PricePanel
-  $header = $('header')
-
+class @PricePanel extends Panel
   name: '金額ボタンで選ぶ'
+  message: 'お求めの金額にふれてください'
 
   constructor: (parent)->
     @panel = $('<div id=prices class=content>')
@@ -12,15 +11,3 @@ class @PricePanel
       @panel.append row = $('<div class=row>')
       for j in [0..5]
         row.append '<div class=cell><div class=button>' + (prices[i * 6 + j] or '')
-
-  show: ->
-    $header.text 'お求めの金額にふれてください'
-    do @panel.show
-    @
-
-  hide: ->
-    do @panel.hide
-    @
-
-  @appendTo: (parent)->
-    new @ parent

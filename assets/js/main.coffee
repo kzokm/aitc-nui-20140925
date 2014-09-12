@@ -116,15 +116,22 @@ $ ->
     search = undefined
   ]
 
+  panel.prev = ->
+    @[((@indexOf @current) - 1 + @length) % @length]
+
+  panel.next = ->
+    @[((@indexOf @current) + 1) % @length]
+
+  panel.set = (@current)->
+    @forEach (p)-> p?.hide()
+    @current?.show()
+    console.log @current, @prev(), @next()
+    $('#prev').text @prev()?.name || ''
+    $('#next').text @next()?.name || ''
+
   $('#prev').on 'click', ->
-    i = (panel.indexOf(panel.current) - 1) % panel.length
-    panel.current = panel[i]
-    panel.forEach (p)-> p?.hide()
-    panel.current?.show()
+    panel.set panel.prev()
 
   $('#next').on 'click', ->
-    i = (panel.indexOf(panel.current) + 1) %  panel.length
-    panel.current = panel[i]
-    panel.forEach (p)-> p?.hide()
-    panel.current?.show()
+    panel.set panel.next()
   .trigger 'click'

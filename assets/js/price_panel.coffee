@@ -1,6 +1,8 @@
 class @PricePanel
   $header = $('header')
 
+  name: '金額ボタンで選ぶ'
+
   constructor: (parent)->
     @panel = $('<div id=prices class=content>')
        .appendTo parent

@@ -2,6 +2,8 @@ class @RailwayMap
   WIDTH: 1800
   HEIGHT: 1300
 
+  name: '路線図でさがす'
+
   constructor: (parent)->
     map = d3.select parent
       .append 'svg'
@@ -17,7 +19,6 @@ class @RailwayMap
     @stations = map.append 'g'
       .attr class: 'stations'
 
-    console.log map
     @panel = $('#railway_map')
 
   _lat: 35.80

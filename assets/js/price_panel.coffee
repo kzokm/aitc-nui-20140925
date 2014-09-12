@@ -7,7 +7,9 @@ class @PricePanel extends Panel
        .appendTo parent
 
     prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
-    for i in [0..3]
+    rows = 3
+    columns = 5
+    for i in [0..rows - 1]
       @panel.append row = $('<div class=row>')
-      for j in [0..5]
-        row.append '<div class=cell><div class=button>' + (prices[i * 6 + j] or '')
+      for j in [0..columns - 1]
+        row.append '<div class=cell><div class=button>' + (prices[i * columns + j] or '')

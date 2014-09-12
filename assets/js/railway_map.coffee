@@ -2,8 +2,8 @@ class @RailwayMap extends Panel
   name: '路線図でさがす'
   message: '手を近づけると地図が拡大します'
 
-  WIDTH: 1700
-  HEIGHT: 700
+  WIDTH: 1220
+  HEIGHT: 460
 
   constructor: (parent)->
     map = d3.select parent

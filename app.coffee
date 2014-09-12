@@ -24,7 +24,7 @@ app.use coffee
 
 app.use express.static "#{__dirname}/.cache"
 
-app.get '/', (req, res) ->
-  res.render 'index'
+app.get '/*', (req, res) ->
+  res.render req.params[0]
 
 module.exports = app

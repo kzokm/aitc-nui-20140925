@@ -1,10 +1,9 @@
 class @PricePanel
   $header = $('header')
 
-  constructor: ->
+  constructor: (parent)->
     @panel = $('<div id=prices class=content>')
-       .appendTo '#content'
-       .hide()
+       .appendTo parent
 
     prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
     for i in [0..3]
@@ -15,9 +14,11 @@ class @PricePanel
   show: ->
     $header.text 'お求めの金額にふれてください'
     do @panel.show
+    @
 
   hide: ->
     do @panel.hide
+    @
 
-  @create: ->
-    new @
+  @appendTo: (parent)->
+    new @ parent

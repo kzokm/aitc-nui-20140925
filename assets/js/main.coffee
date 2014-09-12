@@ -109,6 +109,22 @@ $ ->
     else
       tipCursor.calibrator.stop()
 
-prices = PricePanel.create()
 
-do prices.show
+  panel = [
+    price = PricePanel.appendTo '#content'
+    map = RailwayMap.appendTo '#content'
+    search = undefined
+  ]
+
+  $('#prev').on 'click', ->
+    i = (panel.indexOf(panel.current) - 1) % panel.length
+    panel.current = panel[i]
+    panel.forEach (p)-> p?.hide()
+    panel.current?.show()
+
+  $('#next').on 'click', ->
+    i = (panel.indexOf(panel.current) + 1) %  panel.length
+    panel.current = panel[i]
+    panel.forEach (p)-> p?.hide()
+    panel.current?.show()
+  .trigger 'click'

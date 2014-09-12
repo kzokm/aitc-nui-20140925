@@ -7,10 +7,26 @@ meta(name='viewport', content='width=device-width, initial-scale=1.0')
 title NUI券売機
 
 link(rel='stylesheet', href='css/layout.css', media='all')
+script(src='//d3js.org/d3.v3.min.js')
 script(src='//code.jquery.com/jquery-2.1.1.min.js')
 script(src='//js.leapmotion.com/leap-0.6.1.min.js')
 script(src='//js.leapmotion.com/leap-plugins-0.1.6.min.js')
 script(src='//localhost:6556/eyetribe.min.js')
 
+script(src='js/vector.js')
+script(src='js/touchCalibrator.js')
+
+block scripts
+
 #container
-  block content
+  header
+  #content
+    block content
+
+  #controller
+    #calibrate.button Calibrate
+    #prev.button prev
+    #next.button next
+
+  #debug
+    #leap-info

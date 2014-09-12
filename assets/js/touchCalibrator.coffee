@@ -78,7 +78,7 @@ class @TouchCalibrator
       dTip._add @origin.client
 
   start: (tipCursor)->
-    $('#panel .button')
+    $('#prices .button')
       .addClass 'selected'
       .on 'calibrate', (e, tapped)->
         console.log @, arguments
@@ -90,7 +90,7 @@ class @TouchCalibrator
     self = @
 
   stop: ->
-    $('#panel .button').removeClass 'selected'
+    $('#prices .button').removeClass 'selected'
       .off 'calibrate'
     @
 

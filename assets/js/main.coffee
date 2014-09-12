@@ -108,3 +108,7 @@ $ ->
         .start(tipCursor)
     else
       tipCursor.calibrator.stop()
+
+prices = PricePanel.create()
+
+do prices.show

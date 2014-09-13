@@ -18,8 +18,9 @@ Leap?.loop (frame)->
         .show()
     else
       scenePosition ||= frame.leapToScene nearest.stabilizedTipPosition
-      tipCursor.moveTo x: scenePosition[0], y: scenePosition[1]
+      tipCursor.moveTo scenePosition
         .show()
+
   else
     tipCursor.hide()
 
@@ -74,9 +75,10 @@ class Cursor
     @element = $("<div id=#{id} class=cursor>")
       .css
         position: 'absolute'
-    $('body').append @element
+      .appendTo 'body'
 
-    $('#debug').append @info = $("<div id=#{id}-info>")
+    @info = $("<div id=#{id}-info>")
+      .appendTo '#debug'
 
   moveTo: (position)->
     if Array.isArray position
@@ -97,18 +99,19 @@ class Cursor
     @element.hide()
     @
 
-gazeCursor = new Cursor 'gaze'
-tipCursor = new Cursor 'tip'
+gazeCursor = tipCursor = undefined
 
 $ ->
+  gazeCursor = new Cursor 'gaze'
+  tipCursor = new Cursor 'tip'
+
   $calibrationButton = $('#calibrate').click ->
     $calibrationButton.toggleClass 'selected'
     if $calibrationButton.hasClass 'selected'
       tipCursor.calibrator = new TouchCalibrator()
-        .start(tipCursor)
+        .start tipCursor, '#prices .button'
     else
       tipCursor.calibrator.stop()
-
 
   panel = [
     price = PricePanel.appendTo '#content'

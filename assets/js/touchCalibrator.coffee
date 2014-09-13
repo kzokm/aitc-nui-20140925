@@ -77,28 +77,26 @@ class @TouchCalibrator
       dTip.z *= @origin.d.z
       dTip._add @origin.client
 
-  start: (tipCursor)->
-    $('#prices .button')
-      .addClass 'selected'
+  start: (tipCursor, targetElement = '.button')->
+    @target = $(targetElement)
+      .addClass 'calibrating'
       .on 'calibrate', (e, tapped)->
         console.log @, arguments
         if tipCursor.finger?
           self.push
             tip: new Vector3D tipCursor.finger.stabilizedTipPosition
             client: new Vector3D tapped.clientX, tapped.clientY
-          $(@).removeClass 'selected'
+          $(@).removeClass 'calibrating'
     self = @
 
   stop: ->
-    $('#prices .button').removeClass 'selected'
+    @target.removeClass 'calibrating'
       .off 'calibrate'
     @
 
-$ ->
-  $('#panel')
-    .on 'click', '.button.selected', (event)->
-      $(@).triggerHandler 'calibrate', event
-
+$(document)
+  .on 'click', '.calibrating', (event)->
+    $(@).triggerHandler 'calibrate', event
 
 Math.sum ||= ->
   sum = 0

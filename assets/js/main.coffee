@@ -1,23 +1,23 @@
 Leap?.loop (frame)->
   html = 'Leap:<ul>'
 
-  nearest = undefined
+  frontmost = undefined
   frame.fingers.forEach (finger)->
+    return unless finger.extended
     html += "<li>#{finger.type}: "
-    html += "#{finger.tipPosition[0]}, #{finger.tipPosition[1]}, #{finger.tipPosition[2]}"
-    html += " / #{finger.stabilizedTipPosition[0]}, #{finger.stabilizedTipPosition[1]}, #{finger.stabilizedTipPosition[2]}"
+    html += "#{finger.stabilizedTipPosition[0]}, #{finger.stabilizedTipPosition[1]}, #{finger.stabilizedTipPosition[2]}"
 
-    if !nearest? || nearest?.tipPosition[2] > finger.tipPosition[2]
-      nearest = finger
+    if !frontmost? || frontmost?.stabilizedTipPosition[2] > finger.stabilizedTipPosition[2]
+      frontmost = finger
 
-  tipCursor.finger = nearest
-  if nearest?
-    scenePosition = tipCursor.calibrator?.convert nearest.stabilizedTipPosition
+  tipCursor.finger = frontmost
+  if frontmost?
+    scenePosition = tipCursor.calibrator?.convert frontmost.stabilizedTipPosition
     if scenePosition?
       tipCursor.moveTo scenePosition
         .show()
     else
-      scenePosition ||= frame.leapToScene nearest.stabilizedTipPosition
+      scenePosition = frame.leapToScene frontmost.stabilizedTipPosition
       tipCursor.moveTo scenePosition
         .show()
 
@@ -30,6 +30,7 @@ Leap?.Frame::leapToScene = (position)->
   norm = @interactionBox.normalizePoint position
   [ window.innerWidth * norm[0], window.innerHeight * (1 - norm[1]) ]
 
+
 EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
     clientPosition = frame.smoothedCoordinates.toClient()
@@ -38,11 +39,9 @@ EyeTribe?.loop (frame)->
     gazeCursor.moveTo clientPosition
       .show()
 
-    $('#panel .button').each ->
-        if clientPosition.inbounds @getBoundingClientRect()
-          $(@).addClass 'focus'
-        else
-          $(@).removeClass 'focus'
+    $('#content .button').each ->
+      inbounds = @containsPosition clientPosition
+      $(@).toggleClass 'focus', inbounds
   else
     gazeCursor.hide()
 
@@ -56,13 +55,6 @@ Point?::toClient = ->
 Point?::toScreen = ->
   @add Point.origin
 
-Point?::inbounds = (rect)->
-  x = rect.x || rect.left
-  y = rect.y || rect.top
-  @x >= x &&
-    @x <= x + rect.width &&
-    @y >= y &&
-    @y <= y + rect.height
 
 document.onmousemove = (event)->
   clientLeft = event.screenX - event.clientX
@@ -82,13 +74,13 @@ class Cursor
 
   moveTo: (position)->
     if Array.isArray position
-      [x, y] = position
+      [@x, @y] = position
     else
-      {x, y} = position
-    @info.html "#{@id}:<br>#{x}, #{y}"
+      {@x, @y} = position
+    @info.html "#{@id}:<br>#{@x}, #{@y}"
     @element.css
-      left: x
-      top: y
+      left: @x
+      top: @y
     @
 
   show: ->
@@ -99,11 +91,33 @@ class Cursor
     @element.hide()
     @
 
+class TipCursor extends Cursor
+  moveTo: (position)->
+    super
+    touching = @finger?.touchZone == 'touching'
+    @element.toggleClass 'touching', touching
+    if touching
+      panel.trigger 'touching', @
+    else
+      panel.trigger 'blur'
+    @
+
 gazeCursor = tipCursor = undefined
+panel = undefined
+
+
+Element::containsPosition = (point)->
+  {x, y} = point
+  rect = @getBoundingClientRect()
+  x >= rect.left &&
+    x <= rect.right &&
+    y >= rect.top &&
+    y <= rect.bottom
+
 
 $ ->
   gazeCursor = new Cursor 'gaze'
-  tipCursor = new Cursor 'tip'
+  tipCursor = new TipCursor 'tip'
 
   $calibrationButton = $('#calibrate').click ->
     $calibrationButton.toggleClass 'selected'
@@ -131,9 +145,15 @@ $ ->
     $('#prev').text @prev()?.name || ''
     $('#next').text @next()?.name || ''
 
+  panel.trigger = ->
+    @current?.trigger.apply @current, arguments
+
   $('#prev').on 'click', ->
     panel.set panel.prev()
 
   $('#next').on 'click', ->
     panel.set panel.next()
   .trigger 'click'
+
+  $(document).on 'focus', '.button', ->
+    console.log 'focus', @

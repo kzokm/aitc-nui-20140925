@@ -7,8 +7,8 @@ class @Vector2D
         {x, y} = x
       else if x.left?
         {left: x, top: y} = x
-    @x = x || 0
-    @y = y || 0
+    @x = x ? 0
+    @y = y ? 0
 
   _add: (other)->
     @x += other.x
@@ -77,7 +77,7 @@ class @Vector3D extends Vector2D
         z = x[2]
       else if x.x?
         z = x.z
-    @z = z || 0
+    @z = z ? 0
 
   _add: (other)->
     @z += other.z

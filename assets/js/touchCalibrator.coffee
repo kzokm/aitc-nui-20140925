@@ -98,11 +98,11 @@ $(document)
   .on 'click', '.calibrating', (event)->
     $(@).triggerHandler 'calibrate', event
 
-Math.sum ||= ->
+Math.sum ?= ->
   sum = 0
   for v in arguments
     sum += v
   sum
 
-Math.average ||= ->
+Math.average ?= ->
   (@sum.apply @, arguments) / arguments.length

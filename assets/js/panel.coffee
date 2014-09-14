@@ -1,7 +1,16 @@
 class @Panel
-  show: ->
+
+  onCreate: ->
+
+  onResume: ->
     $('#message').text @message
+
+  trigger: ->
+    @panel.triggerHandler.apply @panel, arguments
+
+  show: ->
     do @panel.show
+    do @onResume
     @
 
   hide: ->
@@ -9,4 +18,6 @@ class @Panel
     @
 
   @appendTo: (parent)->
-    new @ parent
+    self = new @ parent
+    do self.onCreate
+    self

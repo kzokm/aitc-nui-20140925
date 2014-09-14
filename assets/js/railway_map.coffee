@@ -34,7 +34,7 @@ class @RailwayMap extends Panel
   draw: (line, options)->
     line.load $.proxy @, '_drawLine', line, options
 
-  _drawLine: (line, options)->
+  _drawLine: (line, options = {})->
     drawer = d3.svg.line()
       .x $.proxy ((d)-> @x d.lon), @
       .y $.proxy ((d)-> @y d.lat), @
@@ -47,8 +47,8 @@ class @RailwayMap extends Panel
       .data [ line.data ]
       .attr
         class: "line l_#{line.code}"
-        stroke: options.line_color || line.color
-        'stroke-width': options.line_width || 1
+        stroke: options.line_color ? line.color
+        'stroke-width': options.line_width ? 1
         fill: 'transparent'
         d: drawer line.data.station_l
 
@@ -72,15 +72,12 @@ class @RailwayMap extends Panel
     @
 
   drawLines: (lines, options)->
-    lines.forEach $.proxy (line)->
+    for line in lines
       @draw line, options
-    , @
     @
 
-
-  @appendTo: (parent)->
-    super parent
-      .drawLines ekidata.jr, line_width: 2
-      .drawLines ekidata.keikyu, stations: false
-      .drawLines ekidata.metro, line_width: 5
-      .drawLines ekidata.toei, line_width: 3
+  onCreate: ->
+    @drawLines ekidata.jr, line_width: 2
+    @drawLines ekidata.keikyu, stations: false
+    @drawLines ekidata.metro, line_width: 5
+    @drawLines ekidata.toei, line_width: 3

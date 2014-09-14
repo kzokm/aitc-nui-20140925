@@ -45,6 +45,7 @@ Leap?.Hand::countExtendedFingers = ->
 
 
 onSwipe = (frame, gesture)->
+  return
   if gesture.direction[0] > 0
     $.panel.showNext()
   else

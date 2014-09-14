@@ -13,6 +13,9 @@ $content-height = 460px
 $button-width = 250px
 $button-height = 120px
 
+$controller-button-width = 350px
+$controller-button-height = 100px
+
 $tooltip-left = $content-left + 8px
 $tooltip-top = $message-height + $content-height + 20px
 $tooltip-width = $content-width
@@ -90,9 +93,15 @@ $backgroud-color-thin = #f8fff8
 
 
 #controller
-  display table-row
-  .button.selected
-    background-color red
+  display table
+  margin 0 auto
+  .raw
+    display table-row
+  .button
+    width $controller-button-width
+    height $controller-button-height
+    &.selected
+      background-color red
 
 #tooltip
   display none

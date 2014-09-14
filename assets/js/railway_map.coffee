@@ -6,16 +6,48 @@ class @RailwayMap extends Panel
     map = d3.select parent
       .append 'svg'
       .attr
-         id: 'railway-map'
-         class: 'map panel'
+        id: 'railway-map'
+        class: 'panel map'
 
-    @lines = map.append 'g'
+    base = map.append 'g'
+
+    @lines = base.append 'g'
       .attr class: 'lines'
 
-    @stations = map.append 'g'
+    @stations = base.append 'g'
       .attr class: 'stations'
 
-    $(map[0])
+    dx = dy = 0
+
+    $(map[0]).on
+      finger: (event, tip)->
+        z = tip.finger.tipPosition[2]
+        if z < 0
+          outbounds = !@containsPosition tip
+          scale = Math.max 1, -z / 20
+          if scale <= 5 or outbounds
+            scale = Math.min 4, scale
+
+            rect = @getBoundingClientRect()
+            x = tip.x - rect.left
+            y = tip.y - rect.top
+
+            if outbounds
+              dx = Math.min dx, x if x < 0
+              dx = Math.max dx, x - rect.width if x > rect.width
+              dy = Math.min dy, y if y < 0
+              dy = Math.max dy, y - rect.height if y > rect.height
+              x = Math.max 0, Math.min x, rect.width
+              y = Math.max 0, Math.min y, rect.height
+            x -= (x + dx) * scale
+            y -= (y + dy) * scale
+
+            base.attr
+              transform: "translate(#{x}, #{y}) scale(#{scale})"
+        else
+          base.attr
+            transform: undefined
+          dx = dy = 0
 
   _lat: 35.80
   _lon: 139.5

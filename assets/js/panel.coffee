@@ -3,7 +3,6 @@ $.panel = class @Panel
   constructor: (parent)->
     panes.push @
     @element = @appendTo parent
-      .addClass 'panel'
     do @onCreate
     $.panel = @
 

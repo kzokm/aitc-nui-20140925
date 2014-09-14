@@ -3,7 +3,7 @@ class @PricePanel extends Panel
   message: 'お求めの金額にふれてください'
 
   appendTo: (parent)->
-    $panel = $('<div id=prices class=content>')
+    $panel = $('<div id=prices class=panel>')
        .appendTo parent
 
     prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]

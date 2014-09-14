@@ -64,7 +64,7 @@ EyeTribe?.loop (frame)->
     gazeCursor.moveTo clientPosition
       .show()
 
-    $('#content .button').each ->
+    $('.button').each ->
       inbounds = @containsPosition clientPosition
       $(@).toggleClass 'focus', inbounds
   else

@@ -124,12 +124,9 @@ class Cursor extends FloatingElement
 class TipCursor extends Cursor
   moveTo: (position)->
     super
-    touching = @finger?.touchZone == 'touching'
-    @element.toggleClass 'touching', touching
-    if touching
-      $.panel.trigger 'touching', @
-    else
-      $.panel.trigger 'blur'
+    @touching = @finger?.touchZone == 'touching'
+    @element.toggleClass 'touching', @touching
+    $.panel.trigger 'finger', @
     @
 
 gazeCursor = tipCursor = undefined

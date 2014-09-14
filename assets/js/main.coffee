@@ -37,6 +37,12 @@ Leap?.Frame::leapToScene = (position)->
   norm = @interactionBox.normalizePoint position
   [ window.innerWidth * norm[0], window.innerHeight * (1 - norm[1]) ]
 
+Leap?.Hand::countExtendedFingers = ->
+  counter = 0
+  @fingers.forEach (finger)->
+    counter++ if finger.extended
+  counter;
+
 
 onSwipe = (frame, gesture)->
   if gesture.direction[0] > 0
@@ -45,8 +51,9 @@ onSwipe = (frame, gesture)->
     $.panel.showPrev()
 
 onCircle = (frame, gesture)->
-  clockwise = gesture.normal[2] <= 0
-  $('#calibrate').toggle clockwise
+  if frame.hands[0].countExtendedFingers() >= 4
+    clockwise = gesture.normal[2] <= 0
+    $('#calibrate').toggle clockwise
 
 EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES

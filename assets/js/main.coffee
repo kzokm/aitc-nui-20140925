@@ -1,4 +1,4 @@
-Leap?.loop (frame)->
+Leap?.loop enableGestures: true, (frame)->
   html = 'Leap:<ul>'
 
   frontmost = undefined
@@ -11,7 +11,9 @@ Leap?.loop (frame)->
       frontmost = finger
 
   tipCursor.finger = frontmost
-  if frontmost?
+  unless frontmost?
+    tipCursor.hide()
+  else
     scenePosition = tipCursor.calibrator?.convert frontmost.stabilizedTipPosition
     if scenePosition?
       tipCursor.moveTo scenePosition
@@ -21,8 +23,13 @@ Leap?.loop (frame)->
       tipCursor.moveTo scenePosition
         .show()
 
-  else
-    tipCursor.hide()
+    frame.gestures.forEach (gesture)->
+      if gesture.state == 'stop' && gesture.pointableIds[0] == frontmost.id
+        switch gesture.type
+          when 'swipe'
+            onSwipe frame, gesture
+          when 'circle'
+            onCircle frame, gesture
 
   $('#leap-info').html html
 
@@ -30,6 +37,16 @@ Leap?.Frame::leapToScene = (position)->
   norm = @interactionBox.normalizePoint position
   [ window.innerWidth * norm[0], window.innerHeight * (1 - norm[1]) ]
 
+
+onSwipe = (frame, gesture)->
+  if gesture.direction[0] > 0
+    $.panel.showNext()
+  else
+    $.panel.showPrev()
+
+onCircle = (frame, gesture)->
+  clockwise = gesture.normal[2] <= 0
+  $('#calibrate').toggle clockwise
 
 EyeTribe?.loop (frame)->
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
@@ -132,7 +149,6 @@ Element::containsPosition = (point)->
     y >= rect.top &&
     y <= rect.bottom
 
-
 $ ->
   gazeCursor = new Cursor 'gaze-cursor'
   tipCursor = new TipCursor 'tip-cursor'
@@ -146,6 +162,7 @@ $ ->
         .start tipCursor, '#prices .button'
     else
       tipCursor.calibrator.stop()
+  .hide()
 
   PricePanel.appendTo '#content'
   RailwayMap.appendTo '#content'

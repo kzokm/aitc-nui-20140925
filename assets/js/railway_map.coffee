@@ -2,17 +2,12 @@ class @RailwayMap extends Panel
   name: '路線図でさがす'
   message: '手を近づけると地図が拡大します'
 
-  WIDTH: 1220
-  HEIGHT: 460
-
-  constructor: (parent)->
+  appendTo: (parent)->
     map = d3.select parent
       .append 'svg'
       .attr
-         id: 'railway_map'
-         class: 'map'
-         width: @WIDTH
-         height: @HEIGHT
+         id: 'railway-map'
+         class: 'map panel'
 
     @lines = map.append 'g'
       .attr class: 'lines'
@@ -20,7 +15,7 @@ class @RailwayMap extends Panel
     @stations = map.append 'g'
       .attr class: 'stations'
 
-    @panel = $('#railway_map')
+    $(map[0])
 
   _lat: 35.80
   _lon: 139.5
@@ -77,6 +72,7 @@ class @RailwayMap extends Panel
     @
 
   onCreate: ->
+    super
     @drawLines ekidata.jr, line_width: 2
     @drawLines ekidata.keikyu, stations: false
     @drawLines ekidata.metro, line_width: 5

@@ -62,15 +62,12 @@ document.onmousemove = (event)->
   Point?.origin = new Point clientLeft, clientTop
 
 
-class Cursor
+class FloatingElement
   constructor: (@id)->
-    @element = $("<div id=#{id} class=cursor>")
+    @element = $("<div id=#{id}>")
       .css
         position: 'absolute'
       .appendTo 'body'
-
-    @info = $("<div id=#{id}-info>")
-      .appendTo '#debug'
 
   moveTo: (position)->
     if Array.isArray position
@@ -91,19 +88,40 @@ class Cursor
     @element.hide()
     @
 
+
+class Cursor extends FloatingElement
+  constructor: (id)->
+    super id
+    @element.addClass 'cursor'
+    @info = $("<div id=#{id}-info>")
+      .appendTo '#debug'
+
 class TipCursor extends Cursor
   moveTo: (position)->
     super
     touching = @finger?.touchZone == 'touching'
     @element.toggleClass 'touching', touching
     if touching
-      panel.trigger 'touching', @
+      $.panel.trigger 'touching', @
     else
-      panel.trigger 'blur'
+      $.panel.trigger 'blur'
     @
 
 gazeCursor = tipCursor = undefined
-panel = undefined
+
+
+
+class @Tooltip extends FloatingElement
+  constructor: ->
+    super 'tooltip'
+
+  bind: (element)->
+
+  show: (content)->
+    @element.html content
+    super
+
+@tooltip = undefined
 
 
 Element::containsPosition = (point)->
@@ -116,8 +134,10 @@ Element::containsPosition = (point)->
 
 
 $ ->
-  gazeCursor = new Cursor 'gaze'
-  tipCursor = new TipCursor 'tip'
+  gazeCursor = new Cursor 'gaze-cursor'
+  tipCursor = new TipCursor 'tip-cursor'
+
+  $.tooltip = new Tooltip
 
   $calibrationButton = $('#calibrate').click ->
     $calibrationButton.toggleClass 'selected'
@@ -127,33 +147,13 @@ $ ->
     else
       tipCursor.calibrator.stop()
 
-  panel = [
-    price = PricePanel.appendTo '#content'
-    map = RailwayMap.appendTo '#content'
-    search = StationSearch.appendTo '#content'
-  ]
-
-  panel.prev = ->
-    @[((@indexOf @current) - 1 + @length) % @length]
-
-  panel.next = ->
-    @[((@indexOf @current) + 1) % @length]
-
-  panel.set = (@current)->
-    @forEach (p)-> p?.hide()
-    @current?.show()
-    $('#prev').text @prev()?.name || ''
-    $('#next').text @next()?.name || ''
-
-  panel.trigger = ->
-    @current?.trigger.apply @current, arguments
+  PricePanel.appendTo '#content'
+  RailwayMap.appendTo '#content'
+  StationSearch.appendTo '#content'
 
   $('#prev').on 'click', ->
-    panel.set panel.prev()
+    $.panel.showPrev()
 
   $('#next').on 'click', ->
-    panel.set panel.next()
+    $.panel.showNext()
   .trigger 'click'
-
-  $(document).on 'focus', '.button', ->
-    console.log 'focus', @

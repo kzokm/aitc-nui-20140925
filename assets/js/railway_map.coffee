@@ -2,14 +2,39 @@ class @RailwayMap extends Panel
   name: '路線図でさがす'
   message: '手を近づけると地図が拡大します'
 
+  projection = d3.geo.mercator()
+    .scale 130000
+    .center [139.65, 35.63]
+    .translate [500, 400]
+
   appendTo: (parent)->
-    map = d3.select parent
+    svg = d3.select parent
       .append 'svg'
       .attr
         id: 'railway-map'
-        class: 'panel map'
+        class: 'panel'
+        width: 2000
+        height: 1000
 
-    base = map.append 'g'
+    base = svg.append 'g'
+
+    @map = base.append 'g'
+      .attr class: 'map'
+
+    @map.append 'image'
+      .attr
+        'xlink:href': 'images/map.png'
+        x: -725
+        y: -432.4
+        width: 1700 * 1.56
+        height: 960 * 1.56
+
+    #@_drawMap 'chiba', color: '#fff', fill: '#ccc'
+    #@_drawMap 'tokyo', color: '#fff', fill: '#ccc'
+    #@_drawMap 'chiba-coastline', color: '#000'
+    #@_drawMap 'tokyo-coastline', color: '#000'
+    #@_drawMap 'kanagawa-coastline', color: '#000'
+    #@_drawMap 'kanagawa-river', color: '#008'
 
     @lines = base.append 'g'
       .attr class: 'lines'
@@ -19,7 +44,7 @@ class @RailwayMap extends Panel
 
     dx = dy = 0
 
-    $(map[0]).on
+    $(svg[0]).on
       finger: (event, tip)->
         z = tip.finger.tipPosition[2]
         if z < 0
@@ -49,22 +74,36 @@ class @RailwayMap extends Panel
             transform: undefined
           dx = dy = 0
 
-  _lat: 35.80
-  _lon: 139.5
-  _scale: 3000
+  _drawMap: (id, options = {})->
+    d3.json "geodata/#{id}.json", $.proxy (error, json)->
+      console.log json.features.length
+      console.log d3.geo.centroid json
 
-  x: (lon)->
-    Math.floor (lon - @_lon) * @_scale
-  y: (lat)->
-    Math.floor (@_lat - lat) * @_scale
+      path = d3.geo.path()
+        .projection projection
 
-  draw: (line, options)->
+      @map.append 'g'
+        .attr id: id
+        .selectAll 'path'
+        .data json.features
+        .enter()
+        .append 'path'
+          .attr
+            d: path
+            stroke: options.color ? '#000'
+            fill: options.fill ? 'transparent'
+    , @
+
+  draw: (line, options = {})->
     line.load $.proxy @, '_drawLine', line, options
 
-  _drawLine: (line, options = {})->
+  _drawLine: (line, options)->
+    line.data.station_l.forEach (d)->
+      [d.x, d.y] = projection [d.lon, d.lat]
+
     drawer = d3.svg.line()
-      .x $.proxy ((d)-> @x d.lon), @
-      .y $.proxy ((d)-> @y d.lat), @
+      .x (d)-> d.x
+      .y (d)-> d.y
       .interpolate 'cardinal'
 
     if line.code == 11302
@@ -88,14 +127,14 @@ class @RailwayMap extends Panel
       .attr
         class: "l_#{line.code}"
       .selectAll 'circle'
-      .data line.data.station_l
+      .data line.data.station_l.filter (d)-> d.station_cd
       .enter()
         .append 'circle'
       .attr
         class: (d)->"station s_#{d.station_cd}"
         r: 5
-        cx: $.proxy ((d)-> @x d.lon), @
-        cy: $.proxy ((d)-> @y d.lat), @
+        cx: (d)-> d.x
+        cy: (d)-> d.y
     @
 
   drawLines: (lines, options)->

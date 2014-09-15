@@ -2,6 +2,7 @@ express = require 'express'
 logger = require 'morgan'
 stylus = require 'stylus'
 coffee = require 'coffee-middleware'
+compression = require 'compression'
 
 app = express()
 app.use logger 'dev'
@@ -9,6 +10,9 @@ app.use logger 'dev'
 # view engine setup
 app.set 'views', "#{__dirname}/views"
 app.set 'view engine', 'jade'
+
+app.use compression
+  debug: true
 
 app.use express.static "#{__dirname}/public"
 app.use express.static "#{__dirname}/assets"

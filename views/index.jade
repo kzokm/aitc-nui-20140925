@@ -5,18 +5,21 @@ block content
     include _select_lang.html
 
   section#main.top
-    nav#sidemenu
+    nav.sidemenu
+      div.item#ticket.selected 切符
+      div.item#ic ICカード
 
-    header#message
-    #content
+    .content
+      header#main-message.message
+
       include _price_panel
       include _railway_map
       include _station_search
 
-    nav#controller
-      .raw
-        #main-prev.button prev
-        #calibrate.button Calibrate
-        #main-next.button next
+      nav#main-controller
+        .raw
+          button#main-prev prev
+          button#calibrate Calibrate
+          button#main-next next
 
   script(src='js/main.js')

@@ -4,7 +4,7 @@ class @MainPane
     panes.push @
 
   onResume: ->
-    $('#message').text @message
+    $('#main-message').text @message
 
   show: ->
     panes.current = @

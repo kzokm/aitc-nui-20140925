@@ -4,3 +4,8 @@ class @StationSearch extends MainPane
 
   constructor: (element)->
     super element
+    $name = $('<article id=search-name>')
+      .appendTo(element)
+
+    $name = $('<article id=search-code>')
+      .appendTo(element)

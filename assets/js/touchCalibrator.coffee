@@ -77,7 +77,7 @@ class @TouchCalibrator
       dTip.z *= @origin.d.z
       dTip._add @origin.client
 
-  start: (tipCursor, targetElement = '.button')->
+  start: (tipCursor, targetElement = 'button')->
     @target = $(targetElement)
       .addClass 'calibrating'
       .on 'calibrate', (e, tapped)->

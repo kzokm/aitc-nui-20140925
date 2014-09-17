@@ -134,7 +134,7 @@ class Cursor extends FloatingElement
   constructor: (id)->
     super id + '-cursor'
     @element.addClass 'cursor'
-    @info = $("<div id=#{id}-info>")
+    @info = $("<div class=#{id}>")
       .appendTo '#cursor-info'
 
   moveTo: (position)->
@@ -186,7 +186,7 @@ $ ->
     $calibrationButton.toggleClass 'selected'
     if $calibrationButton.hasClass 'selected'
       tipCursor.calibrator = new TouchCalibrator()
-        .start tipCursor, '#prices .button'
+        .start tipCursor, '#prices button'
     else
       tipCursor.calibrator.stop()
   .hide()

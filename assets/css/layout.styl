@@ -6,53 +6,76 @@
 
 $message-height = 48px
 
+$sidemenu-width = 100px
+
 $content-left = 30px
-$content-width = 1220px
+$content-width = 1220px - $sidemenu-width
 $content-height = 460px
 
-$button-width = 250px
+$button-width = 200px
 $button-height = 120px
-
 $controller-button-width = 350px
 $controller-button-height = 100px
 
-$tooltip-left = $content-left + 8px
+$tooltip-left = $sidemenu-width + 8px
 $tooltip-top = $message-height + $content-height + 20px
 $tooltip-width = $content-width
 $tooltip-height = $button-height
 
-$backgroud-color-deep = #008000
-$backgroud-color-thin = #f8fff8
+$background-color-deep = #0e91f2
+$background-color-thin = #f0f9ff
+
+
+.hidden
+  display: none
 
 
 #container
   width 100%
   height 100%
-  background-color $backgroud-color-thin
+  background-color $background-color-thin
 
-#message
-  line-height $message-height
-  height $message-height
-  vertical-align bottom
-  color white
-  background-color $backgroud-color-deep
-  font-size 32px
-  padding 5px 20px
+#main
+  .sidemenu
+    float left
+    width $sidemenu-width
 
-#content
-  padding 0 $content-left 30px
+    .item
+      width $sidemenu-width - 20px
+      margin 20px 0
+      padding 10px 5px
+      color: #fff
+      background-color #000
 
-  background -moz-linear-gradient(
-      top, $backgroud-color-deep, $backgroud-color-thin
-    )
-  background -webkit-gradient(
-      linear, center top, center bottom,
-      from($backgroud-color-deep), to($backgroud-color-thin)
-    )
+      &.selected
+        border solid 1px #f00
+        border-left none
+      border-radius 0 30px 30px 0
+
+  .content
+    margin-left $sidemenu-width
+
+  .message
+    line-height $message-height
+    height $message-height
+    vertical-align bottom
+    color white
+    background-color $background-color-deep
+    font-size 32px
+    padding 5px 20px
 
   .pane
     width $content-width
     height $content-height
+    padding 0 $content-left 30px
+
+    background -moz-linear-gradient(
+        top, $background-color-deep, $background-color-thin
+      )
+    background -webkit-gradient(
+        linear, center top, center bottom,
+        from($background-color-deep), to($background-color-thin)
+      )
 
 #prices
   display table
@@ -65,21 +88,27 @@ $backgroud-color-thin = #f8fff8
     vertical-align middle
     padding 5px 8px
 
-.button
-  display table-cell
+button
   width $button-width
   height $button-height
 
   font-size 40px
-  text-align center
-  vertical-align middle
+  __text-align center
+  __vertical-align middle
 
-  color white
-  background-color black
-  border 4px outset white
+  color #000
+  background-color #eee
+  __border 4px outset #eee
+  border-radius 30px
+  outline none
 
-  &.focus
-    background-color red
+  &.hover
+  &:hover
+    background-color #fbfbb9
+
+  &:active
+    background-color #fbfbb9
+    color: #f66;
 
   &.calibrating
     background-color #888
@@ -93,16 +122,17 @@ $backgroud-color-thin = #f8fff8
     fill #fff
 
 
-#controller
+#main-controller
   display table
   margin 0 auto
   .raw
     display table-row
-  .button
+  button
     width $controller-button-width
     height $controller-button-height
+    margin 0 10px
     &.selected
-      background-color red
+      background-color #f00
 
 #tooltip
   display none
@@ -110,8 +140,8 @@ $backgroud-color-thin = #f8fff8
   top $tooltip-top
   width $tooltip-width
   height $tooltip-height
-  border 1px solid #000
-  background #fff
+  border 1px solid $background-color-deep
+  background #fbfbb9
   padding 5px
 
 

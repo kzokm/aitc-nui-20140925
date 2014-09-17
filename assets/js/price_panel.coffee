@@ -12,19 +12,19 @@ class @PricePanel extends MainPane
     for i in [0..rows - 1]
       $panel.append row = $('<div class=row>')
       for j in [0..columns - 1]
-        price = prices[i * columns + j] ? ''
-        row.append '<div class=cell><div class=button>' + price
+        price = prices[i * columns + j]
+        row.append '<div class=cell><button>' + price if price
 
     $panel.on
       finger: (event, tip)->
-        $buttons = $panel.find '.button'
-          .removeClass 'focus'
+        $buttons = $panel.find 'button'
+          .removeClass 'hover'
 
         if tip.touching && $panel[0].containsPosition tip
           $buttons.each ->
             if @containsPosition tip
               if price = $(@).text()
-                $(@).addClass 'focus'
+                $(@).addClass 'hover'
                 $.tooltip.show "#{price}円で行ける区間：xxxxxxxxxxxxxxxxx"
               else
                 $.tooltip.hide()

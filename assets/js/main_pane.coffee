@@ -1,5 +1,4 @@
 class @MainPane
-
   constructor: (element)->
     @element = $(element).addClass 'pane'
     panes.push @
@@ -17,9 +16,6 @@ class @MainPane
     do @element.hide
     @
 
-  trigger: ->
-    @element.triggerHandler.apply @element, arguments
-
 
   panes = []
 
@@ -35,9 +31,11 @@ class @MainPane
     $('#main-prev').text @prev()?.name || ''
     $('#main-next').text @next()?.name || ''
 
-  $.main = (command)->
-    switch command
-      when 'prev'
-        panes.set panes.prev()
-      when 'next'
-        panes.set panes.next()
+  $.main = {
+    prev: ->
+      panes.set panes.prev()
+    next: ->
+      panes.set panes.next()
+    trigger: (type, data)->
+      panes.current.element.triggerHandler type, data
+  }

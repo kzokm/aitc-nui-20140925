@@ -1,5 +1,3 @@
-$document = $(document)
-
 Leap?.loop enableGestures: true, (frame)->
   html = 'Leap:<br>'
 
@@ -35,7 +33,7 @@ Leap?.loop enableGestures: true, (frame)->
             onCircle frame, gesture
 
   $('#leap-info').html html + '<br>'
-  $document.trigger 'leap', frame
+  $.top.trigger 'leap', frame
 
 Leap?.Frame::leapToScene = (position)->
   norm = @interactionBox.normalizePoint position
@@ -70,16 +68,15 @@ EyeTribe?.loop (frame)->
     gazeCursor.moveTo clientPosition
       .show()
 
-    $('.button').each ->
+    $('.gaze-receiver').each ->
       inbounds = @containsPosition clientPosition
       $(@).toggleClass 'focus', inbounds
-
-    frame.clientPosition
+      $(@).triggerHandler 'gaze', frame if inbounds
   else
     gazeCursor.hide()
 
   $('#gaze-info').html frame.dump() + '<br>'
-  $document.trigger 'gaze', frame
+  $.top.trigger 'gaze', frame
 
 Point = EyeTribe?.Point2D
 
@@ -96,6 +93,15 @@ document.onmousemove = (event)->
   clientLeft = event.screenX - event.clientX
   clientTop = event.screenY - event.clientY
   Point?.origin = new Point clientLeft, clientTop
+
+
+$.top = {
+  set: (element)->
+    $('section.top').hide()
+    @current = $(element).show()
+  trigger: (type, data)->
+    @current?.triggerHandler type, data
+}
 
 
 class FloatingElement
@@ -140,7 +146,7 @@ class TipCursor extends Cursor
     super
     @touching = @finger?.touchZone == 'touching'
     @element.toggleClass 'touching', @touching
-    $.panel.trigger 'finger', @
+    $.main.trigger 'finger', @
     @
 
 class GazeCursor extends Cursor
@@ -186,8 +192,8 @@ $ ->
   .hide()
 
   $('#main-prev').on 'click', ->
-    $.main 'prev'
+    do $.main.prev
 
   $('#main-next').on 'click', ->
-    $.main 'next'
+    do $.main.next
   .trigger 'click'

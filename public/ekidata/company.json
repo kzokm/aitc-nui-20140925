@@ -1,0 +1,12 @@
+[{"company_cd":11,"rr_cd":21,"company_name":"東武鉄道","company_name_k":"トウブテツドウ","company_name_h":"東武鉄道株式会社","company_name_r":"東武","company_url":"http://www.tobu.co.jp/","company_type":"2","e_sort":"11"},
+{"company_cd":12,"rr_cd":22,"company_name":"西武鉄道","company_name_k":"セイブテツドウ","company_name_h":"西武鉄道株式会社","company_name_r":"西武","company_url":"http://www.seibu-group.co.jp/railways/","company_type":"2","e_sort":"12"},
+{"company_cd":13,"rr_cd":23,"company_name":"京成電鉄","company_name_k":"ケイセイデンテツ","company_name_h":"京成電鉄株式会社","company_name_r":"京成","company_url":"http://www.keisei.co.jp/","company_type":"2","e_sort":"13"},
+{"company_cd":14,"rr_cd":24,"company_name":"京王電鉄","company_name_k":"ケイオウデンテツ","company_name_h":"京王電鉄株式会社","company_name_r":"京王","company_url":"http://www.keio.co.jp/","company_type":"2","e_sort":"14"},
+{"company_cd":15,"rr_cd":25,"company_name":"小田急電鉄","company_name_k":"オダキュウデンテツ","company_name_h":"小田急電鉄株式会社","company_name_r":"小田急","company_url":"http://www.odakyu.jp/","company_type":"2","e_sort":"15"},
+{"company_cd":16,"rr_cd":26,"company_name":"東急電鉄","company_name_k":"トウキョウデンテツ","company_name_h":"東京急行電鉄株式会社","company_name_r":"東急","company_url":"http://www.tokyu.co.jp/","company_type":"2","e_sort":"16"},
+{"company_cd":17,"rr_cd":27,"company_name":"京急電鉄","company_name_k":"ケイキュウデンテツ","company_name_h":"京浜急行電鉄株式会社","company_name_r":"京急","company_url":"http://www.keikyu.co.jp/","company_type":"2","e_sort":"17"},
+{"company_cd":18,"rr_cd":28,"company_name":"東京メトロ","company_name_k":"トウキョウメトロ","company_name_h":"東京地下鉄株式会社","company_name_r":"東京メトロ","company_url":"http://www.tokyometro.jp/","company_type":"2","e_sort":"18"},
+{"company_cd":119,"rr_cd":99,"company_name":"東京都交通局","company_name_k":"トウキョウトコウツウキョク","company_name_h":"東京都交通局","company_name_r":"東京都交通局","company_url":"http://www.kotsu.metro.tokyo.jp/","company_type":"0","e_sort":"119"},
+{"company_cd":123,"rr_cd":99,"company_name":"首都圏新都市鉄道","company_name_k":"シュトケンシントシテツドウ","company_name_h":"首都圏新都市鉄道株式会社","company_name_r":"首都圏新都市鉄道","company_url":"http://www.mir.co.jp/","company_type":"0","e_sort":"123"},
+{"company_cd":131,"rr_cd":99,"company_name":"横浜新都市交通","company_name_k":"ヨコハマシントシコウツウ","company_name_h":"横浜新都市交通","company_name_r":"横浜新都市交通","company_url":"http://www.seasideline.co.jp/","company_type":"0","e_sort":"131"},
+{"company_cd":148,"rr_cd":99,"company_name":"東京モノレール","company_name_k":"トウキョウモノレール","company_name_h":"東京モノレール株式会社","company_name_r":"東京モノレール","company_url":"http://www.tokyo-monorail.co.jp/","company_type":"0","e_sort":"148"}]

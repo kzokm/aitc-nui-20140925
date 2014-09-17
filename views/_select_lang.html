@@ -1,0 +1,28 @@
+<div class="area">
+  LANG1
+</div>
+<div class="area">
+  LANG2
+</div>
+<div class="area">
+  LANG3
+</div>
+<div class="area">
+  LANG3
+</div>
+
+<script>
+$(function() {
+  $.top.set('#lang-selector')
+    .on({
+      gaze: function() {
+        console.log(arguments)
+      },
+      leap: function() {
+        console.log(arguments)
+      }
+    });
+
+  $.top.set('#main')
+});
+</script>

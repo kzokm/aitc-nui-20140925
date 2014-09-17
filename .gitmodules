@@ -1,0 +1,3 @@
+[submodule "eyetribe-websocket"]
+	path = eyetribe-websocket
+	url = https://github.com/kzokm/eyetribe-websocket.git

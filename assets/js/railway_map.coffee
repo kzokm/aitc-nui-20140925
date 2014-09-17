@@ -1,4 +1,4 @@
-class @RailwayMap extends Panel
+class @RailwayMap extends MainPane
   name: '路線図でさがす'
   message: '手を近づけると地図が拡大します'
 
@@ -7,12 +7,16 @@ class @RailwayMap extends Panel
     .center [139.65, 35.63]
     .translate [500, 400]
 
-  appendTo: (parent)->
-    svg = d3.select parent
+  path = d3.geo.path()
+    .projection projection
+
+  constructor: (element)->
+    super element
+
+    svg = d3.select element
       .append 'svg'
       .attr
-        id: 'railway-map'
-        class: 'panel'
+        class: 'pane'
         width: 2000
         height: 1000
 
@@ -29,8 +33,16 @@ class @RailwayMap extends Panel
         width: 1700 * 1.56
         height: 960 * 1.56
 
-    @_drawMap 'N02-13_RailroadSection'
-    @_drawMap 'N02-13_Station', stroke: '#080', stroke_width: 3
+    @_drawMap 'N02-13_RailroadSection',
+      class: 'line'
+    @_drawMap 'N02-13_Station',
+      class: 'station'
+      stroke: '#080'
+      stroke_width: 3
+
+    $(@map[0]).on 'mouseover', '.station', ->
+      console.log @__data__
+
     #@_drawMap 'chiba', stroke: '#fff', fill: '#ccc'
     #@_drawMap 'tokyo', stroke: '#fff', fill: '#ccc'
     #@_drawMap 'chiba-coastline', stroke: '#000'
@@ -44,9 +56,14 @@ class @RailwayMap extends Panel
     @stations = base.append 'g'
       .attr class: 'stations'
 
+    @drawLines ekidata.jr, line_width: 2
+    @drawLines ekidata.keikyu, stations: false
+    @drawLines ekidata.metro, line_width: 5
+    @drawLines ekidata.toei, line_width: 3
+
     dx = dy = 0
 
-    $(svg[0]).on
+    $(element).on
       finger: (event, tip)->
         z = tip.finger.tipPosition[2]
         if z < 0
@@ -85,9 +102,6 @@ class @RailwayMap extends Panel
       console.log json.features.length
       console.log d3.geo.centroid json
 
-      path = d3.geo.path()
-        .projection projection
-
       group
         .selectAll 'path'
         .data json.features
@@ -95,6 +109,7 @@ class @RailwayMap extends Panel
         .append 'path'
           .attr
             d: path
+            class: options.class
             'data-railroad_category': (d)-> d.properties.N02_001
             'data-company_category': (d)-> d.properties.N02_002
             'data-line_name': (d)-> d.properties.N02_003
@@ -122,7 +137,7 @@ class @RailwayMap extends Panel
       drawer = drawer.interpolate 'cardinal-closed'
 
     @lines.append 'path'
-      .data [ line.data ]
+      .datum line.data
       .attr
         class: "line l_#{line.code}"
         d: drawer line.data.station_l
@@ -161,10 +176,3 @@ class @RailwayMap extends Panel
     for line in lines
       @draw line, options
     @
-
-  onCreate: ->
-    super
-    @drawLines ekidata.jr, line_width: 2
-    @drawLines ekidata.keikyu, stations: false
-    @drawLines ekidata.metro, line_width: 5
-    @drawLines ekidata.toei, line_width: 3

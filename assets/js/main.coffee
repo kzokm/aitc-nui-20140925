@@ -1,11 +1,14 @@
+$document = $(document)
+
 Leap?.loop enableGestures: true, (frame)->
-  html = 'Leap:<ul>'
+  html = 'Leap:<br>'
 
   frontmost = undefined
   frame.fingers.forEach (finger)->
     return unless finger.extended
-    html += "<li>#{finger.type}: "
+    html += "Finger(#{finger.type}) [ stabilizedTipPosition:"
     html += "#{finger.stabilizedTipPosition[0]}, #{finger.stabilizedTipPosition[1]}, #{finger.stabilizedTipPosition[2]}"
+    html += ' ]<br>'
 
     if !frontmost? || frontmost?.stabilizedTipPosition[2] > finger.stabilizedTipPosition[2]
       frontmost = finger
@@ -31,7 +34,8 @@ Leap?.loop enableGestures: true, (frame)->
           when 'circle'
             onCircle frame, gesture
 
-  $('#leap-info').html html
+  $('#leap-info').html html + '<br>'
+  $document.trigger 'leap', frame
 
 Leap?.Frame::leapToScene = (position)->
   norm = @interactionBox.normalizePoint position
@@ -56,10 +60,12 @@ onCircle = (frame, gesture)->
     clockwise = gesture.normal[2] <= 0
     $('#calibrate').toggle clockwise
 
+
 EyeTribe?.loop (frame)->
+  html = 'EyeTribe:<ul>'
+
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
     clientPosition = frame.smoothedCoordinates.toClient()
-    console.log frame.smoothedCoordinates, clientPosition
 
     gazeCursor.moveTo clientPosition
       .show()
@@ -67,8 +73,13 @@ EyeTribe?.loop (frame)->
     $('.button').each ->
       inbounds = @containsPosition clientPosition
       $(@).toggleClass 'focus', inbounds
+
+    frame.clientPosition
   else
     gazeCursor.hide()
+
+  $('#gaze-info').html frame.dump() + '<br>'
+  $document.trigger 'gaze', frame
 
 Point = EyeTribe?.Point2D
 
@@ -96,13 +107,12 @@ class FloatingElement
 
   moveTo: (position)->
     if Array.isArray position
-      [@x, @y] = position
+      [x, y] = position
     else
-      {@x, @y} = position
-    @info.html "#{@id}:<br>#{@x}, #{@y}"
+      {x, y} = position
     @element.css
-      left: @x
-      top: @y
+      left: @x = Math.round x
+      top: @y = Math.round y
     @
 
   show: ->
@@ -116,10 +126,14 @@ class FloatingElement
 
 class Cursor extends FloatingElement
   constructor: (id)->
-    super id
+    super id + '-cursor'
     @element.addClass 'cursor'
     @info = $("<div id=#{id}-info>")
-      .appendTo '#debug'
+      .appendTo '#cursor-info'
+
+  moveTo: (position)->
+    super position
+    @info.html "#{@id}: #{@x}, #{@y}<br>"
 
 class TipCursor extends Cursor
   moveTo: (position)->
@@ -129,8 +143,9 @@ class TipCursor extends Cursor
     $.panel.trigger 'finger', @
     @
 
-gazeCursor = tipCursor = undefined
+class GazeCursor extends Cursor
 
+gazeCursor = tipCursor = undefined
 
 
 class @Tooltip extends FloatingElement
@@ -154,9 +169,10 @@ Element::containsPosition = (point)->
     y >= rect.top &&
     y <= rect.bottom
 
+
 $ ->
-  gazeCursor = new Cursor 'gaze-cursor'
-  tipCursor = new TipCursor 'tip-cursor'
+  gazeCursor = new GazeCursor 'gaze'
+  tipCursor = new TipCursor 'tip'
 
   $.tooltip = new Tooltip
 
@@ -169,13 +185,9 @@ $ ->
       tipCursor.calibrator.stop()
   .hide()
 
-  PricePanel.appendTo '#content'
-  RailwayMap.appendTo '#content'
-  StationSearch.appendTo '#content'
+  $('#main-prev').on 'click', ->
+    $.main 'prev'
 
-  $('#prev').on 'click', ->
-    $.panel.showPrev()
-
-  $('#next').on 'click', ->
-    $.panel.showNext()
+  $('#main-next').on 'click', ->
+    $.main 'next'
   .trigger 'click'

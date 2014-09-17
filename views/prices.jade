@@ -1,8 +1,4 @@
 extends _layout
 
-block scripts
-  script(src='js/price_panel.js')
-  script.
-    $(function() {
-      PricePanel.appendTo('#content');
-    })
+block content
+  include _price_panel

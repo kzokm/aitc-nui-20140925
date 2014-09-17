@@ -1,11 +1,21 @@
 extends _layout
 
-block scripts
-  script(src='js/price_panel.js')
+block content
+  section#lang-selector.top
 
-  script(src='js/station_search.js')
+  section#main.top
+    nav#sidemenu
 
-  script(src='js/ekidata.js')
-  script(src='js/railway_map.js')
+    header#message
+    #content
+      include _price_panel
+      include _railway_map
+      include _station_search
+
+    nav#controller
+      .raw
+        #main-prev.button prev
+        #calibrate.button Calibrate
+        #main-next.button next
 
   script(src='js/main.js')

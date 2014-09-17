@@ -1,10 +1,10 @@
-class @PricePanel extends Panel
+class @PricePanel extends MainPane
   name: '金額ボタンで選ぶ'
   message: 'お求めの金額にふれてください'
 
-  appendTo: (parent)->
-    $panel = $('<div id=prices class=panel>')
-       .appendTo parent
+  constructor: (element)->
+    super element
+    $panel = $(element)
 
     prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
     rows = 3

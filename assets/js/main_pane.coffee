@@ -1,18 +1,14 @@
-$.panel = class @Panel
+class @MainPane
 
-  constructor: (parent)->
+  constructor: (element)->
+    @element = $(element).addClass 'pane'
     panes.push @
-    @element = @appendTo parent
-    do @onCreate
-    $.panel = @
-
-  onCreate: ->
 
   onResume: ->
     $('#message').text @message
 
   show: ->
-    $.panel = panes.current = @
+    panes.current = @
     do @onResume
     do @element.show
     @
@@ -36,15 +32,12 @@ $.panel = class @Panel
   panes.set = (@current)->
     @forEach (p)-> p?.hide()
     @current?.show()
-    $('#prev').text @prev()?.name || ''
-    $('#next').text @next()?.name || ''
+    $('#main-prev').text @prev()?.name || ''
+    $('#main-next').text @next()?.name || ''
 
-  showNext: ->
-    panes.set panes.next()
-
-  showPrev: ->
-    panes.set panes.prev()
-
-
-  @appendTo: (parent)->
-    new @ parent
+  $.main = (command)->
+    switch command
+      when 'prev'
+        panes.set panes.prev()
+      when 'next'
+        panes.set panes.next()

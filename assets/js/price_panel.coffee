@@ -5,16 +5,18 @@ class @PricePanel extends MainPane
   constructor: (element)->
     super element
     $panel = $(element)
+    $table = $('<div class=table>').appendTo $panel
 
     # prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
     prices = pricedata.keikyu.prices()
     rows = 4
     columns = 5
     for i in [0..rows - 1]
-      $row = $('<div class=row>').appendTo $panel
+      $row = $('<div class=row>').appendTo $table
       for j in [0..columns - 1]
         price = prices[i * columns + j]
         $cell = $('<div class=cell>').appendTo $row
+        continue unless price?
         $('<button>')
           .text price
           .data

@@ -6,11 +6,13 @@ block content
 
   section#main.top
     nav.sidemenu
-      div.item#ticket.selected 切符
+      img.logo(src='images/aitc_logo_large.png')
+      div.item#ticket.selected きっぷ
       div.item#ic ICカード
 
     .content
-      header#main-message.message
+      header.message
+        span#main-message
 
       include _price_panel
       include _railway_map
@@ -21,5 +23,3 @@ block content
           button#main-prev prev
           button#calibrate Calibrate
           button#main-next next
-
-  script(src='js/main.js')

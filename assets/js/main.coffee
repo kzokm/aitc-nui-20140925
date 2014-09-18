@@ -68,6 +68,7 @@ EyeTribe?.loop (frame)->
     gazeCursor.moveTo clientPosition
       .show()
 
+    frame.clientPosition = new Point clientPosition
     $('.gaze-receiver').each ->
       inbounds = @containsPosition clientPosition
       $(@).toggleClass 'focus', inbounds

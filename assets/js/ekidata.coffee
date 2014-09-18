@@ -1,4 +1,6 @@
 
+return if @ekidata?
+
 class Line
   constructor: (@code, @color = '#000')->
 

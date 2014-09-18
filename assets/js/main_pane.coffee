@@ -1,7 +1,7 @@
 class @MainPane
   constructor: (element)->
     @element = $(element).addClass 'pane'
-    panes.push @
+    panes.push panes.current = @
 
   onResume: ->
     $('#main-message').text @message

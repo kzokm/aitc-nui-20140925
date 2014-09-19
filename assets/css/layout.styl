@@ -4,6 +4,8 @@
   -moz-user-select none
   -webkit-user-select none
 
+$font-size = 32pt
+
 $screen-width = 1280px
 $screen-height = 720px
 
@@ -39,6 +41,7 @@ $background-color-thin = #f0f9ff
 
 body
   overflow hidden
+  font-size $font-size
 
 #container
   width $screen-width
@@ -56,13 +59,16 @@ body
   .sidemenu
     float left
     width $sidemenu-width
+    font-size 16pt
 
     img.logo
       width $sidemenu-width + 30px
 
     .item
-      width $sidemenu-width - 20px
-      margin 20px 0
+      width $sidemenu-width - 8px
+      height 40px
+      line-height 40px
+      margin 25px 0
       padding 10px 5px
       color #fff
       background-color #000
@@ -80,7 +86,6 @@ body
     height $message-height
     vertical-align bottom
     color #002
-    font-size 40px
     padding 5px 0px 5px 40px
 
   .pane
@@ -89,10 +94,10 @@ body
     padding 0 $content-padding-width
     background transparent
 
-#prices
-  .table
-    display table
-    margin 0 auto
+
+.table
+  display table
+  margin 0 auto
 
   .row
     display table-row
@@ -102,22 +107,15 @@ body
     vertical-align middle
     padding 8px 10px
 
-  button
-    font-weight bold
-    width ($content-width / 5) - 20px
-    height ($content-height / 4) - 20px
 
 button
   width $button-width
   height $button-height
 
-  font-size 40px
-  __text-align center
-  __vertical-align middle
+  font-size $font-size
 
   color #000
   background-color #eee
-  __border 4px outset #eee
   border-radius 30px
   outline none
 
@@ -135,6 +133,31 @@ button
   &.calibrating
     background-color #888
 
+  &:disabled
+    color: #eee
+    background-color #ccc
+    border-color #888
+
+
+#prices
+  button
+    font-weight bold
+    width ($content-width / 5) - 20px
+    height ($content-height / 4) - 20px
+
+#search
+  header
+    text-align center
+
+  button
+    width 75px
+    height 70px
+    border-radius 20px
+
+#search-name
+
+
+#search-code
 
 #railway-map
   .pane

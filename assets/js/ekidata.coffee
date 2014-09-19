@@ -1,19 +1,36 @@
 
 return if @ekidata?
 
+_datacache = {}
+
+@ekidata =
+  fetch: (name, callback, self)->
+    self ?= @
+    cached = _datacache[name]
+    if cached
+      callback?.call self, cached
+    else
+      $.getJSON "ekidata/#{name}.json", (data)->
+        _datacache[name] = data
+        callback.call self, data
+    @
+
+  load: (callback, self)->
+    self ?= @
+    @fetch 'company', (@companies)->
+      @fetch 'line', (@lines)->
+        @fetch 'station', (@stations)->
+          callback?.call self, ekidata
+
 class Line
   constructor: (@code, @color = '#000')->
 
   load: (callback)->
-    unless @data?
-      d3.json "ekidata/l/#{@code}.json", $.proxy (error, json)->
-        callback?.apply @, @data = json
-      , @
-    else
-      callback?.apply @, @data
+    ekidata.fetch "l/#{@code}", $.proxy (@data)->
+      callback.call @, data
+    , @
 
-@ekidata =
-  jr: [
+ekidata.jr = [
 #      new Line 11301
 #      new Line 11303
 #      new Line 11304
@@ -27,12 +44,12 @@ class Line
     new Line 11302, '#80c241'
   ]
 
-  keikyu: [
+ekidata.keikyu = [
     new Line 27001
     new Line 27002
   ]
 
-  metro: [
+ekidata.metro = [
     new Line 28001, '#f39700'
     new Line '28002-1', '#e60012'
     new Line '28002-2', '#e60012'
@@ -45,7 +62,7 @@ class Line
     new Line 28010, '#bb641d'
   ]
 
-  toei: [
+ekidata.toei = [
     new Line 99301, '#b6007a'
     new Line 99302, '#e85298'
     new Line 99303, '#0079c2'

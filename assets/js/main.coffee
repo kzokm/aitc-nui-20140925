@@ -45,9 +45,9 @@ Leap?.Hand::countExtendedFingers = ->
 onSwipe = (frame, gesture)->
   return
   if gesture.direction[0] > 0
-    $.panel.showNext()
+    do $.main.next
   else
-    $.panel.showPrev()
+    do $.main.prev
 
 onCircle = (frame, gesture)->
   if frame.hands[0].countExtendedFingers() >= 4

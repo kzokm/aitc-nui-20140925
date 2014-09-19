@@ -42,6 +42,3 @@ class @MainPane
     trigger: (type, data)->
       panes.current?.trigger type, data
   }
-
-
-$.fn.isVisible ?= -> $.expr.filters.visible @[0]

@@ -4,32 +4,24 @@ class @PricePanel extends MainPane
 
   constructor: (element)->
     super element
-    $panel = $(element)
-    $table = $('<div class=table>').appendTo $panel
 
-    # prices = [ 140, 160, 170, 220, 310, 390, 470, 550, 640, 720, 800, 920 ]
     prices = pricedata.keikyu.prices()
-    rows = 4
-    columns = 5
-    for i in [0..rows - 1]
-      $row = $('<div class=row>').appendTo $table
-      for j in [0..columns - 1]
-        price = prices[i * columns + j]
-        $cell = $('<div class=cell>').appendTo $row
-        continue unless price?
+    $.createTable rows = 4, columns = 5, (i, j)->
+      price = prices[i * columns + j]
+      if price?
         $('<button>')
           .text price
           .data
             price: price
             names: pricedata.keikyu.names price
-          .appendTo $cell
+    .appendTo element
 
-    $panel
+    $(element)
       .on 'finger', (event, tip)->
-        $buttons = $panel.find 'button'
+        $buttons = $('button', element)
           .removeClass 'hover'
 
-        if tip.touching && $panel[0].containsPosition tip
+        if tip.touching && element.containsPosition tip
           $buttons.each ->
             if @containsPosition tip
               $(@).trigger 'mouseenter'

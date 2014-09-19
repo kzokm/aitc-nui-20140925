@@ -17,25 +17,7 @@ class @PricePanel extends MainPane
     .appendTo element
 
     $(element)
-      .on 'finger', (event, tip)->
-        $buttons = $('button', element)
-          .removeClass 'hover'
-
-        if tip.touching && element.containsPosition tip
-          $buttons.each ->
-            if @containsPosition tip
-              $(@).trigger 'mouseenter'
-        else
-          $.tooltip.hide()
-
-      .on 'mouseenter', 'button', ()->
+      .tooltip 'button', ->
         {price, names} = $(@).data()
         if price?
-          $(@).addClass 'hover'
-          $.tooltip.show "#{price}円で以下の駅まで乗車できます。<br><em>#{names.join '、'}</em>"
-        else
-          $.tooltip.hide()
-
-      .on 'mouseleave', 'button', ()->
-        $(@).removeClass 'hover'
-        $.tooltip.hide()
+          "#{price}円で以下の駅まで乗車できます。<br><em>#{names.join '、'}</em>"

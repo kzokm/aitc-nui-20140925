@@ -64,3 +64,39 @@ $.fn.extend
   isVisible: -> $.expr.filters.visible @[0]
   enable: (bool = true)-> @prop 'disabled', !bool
   disable: (bool = true)-> @prop 'disabled', bool
+
+
+# ツールチップの表示
+$.fn.tooltip = (selector, callback)->
+  unless typeof callback == 'function'
+    $(@).trigger 'tooltip', selector
+    return
+
+  $(@)
+    .on 'finger', (event, tip)->
+      $selection = $(selector, @)
+      current = $selection.filter('.hover')[0]
+      if tip.touching && @containsPosition tip
+        $selection.each ->
+          if @containsPosition tip
+            unless @ == current
+              $(current).removeClass 'hover'
+              $(@).tooltip 'show'
+            current = undefined
+      $(current).tooltip 'hide' if current
+    .on 'mouseenter', selector, ()->
+      $(@).tooltip 'show'
+    .on 'mouseleave', selector, ()->
+      $(@).tooltip 'hide'
+    .on 'tooltip', selector, (event, command)->
+      switch command
+        when 'show'
+          message = callback.call @
+          if message
+            $(@).addClass 'hover'
+            $.tooltip.show message
+          else
+            $.tooltip.hide()
+        when 'hide'
+          $.tooltip.hide()
+          $(@).removeClass 'hover'

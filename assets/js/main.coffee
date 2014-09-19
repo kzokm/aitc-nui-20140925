@@ -161,8 +161,6 @@ class @Tooltip extends FloatingElement
     @element.html content
     super
 
-@tooltip = undefined
-
 
 Element::containsPosition = (point)->
   {x, y} = point

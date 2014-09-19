@@ -155,8 +155,6 @@ class @Tooltip extends FloatingElement
   constructor: ->
     super 'tooltip'
 
-  bind: (element)->
-
   show: (content)->
     @element.html content
     super

@@ -1,6 +1,6 @@
 class @RailwayMap extends MainPane
   name: '路線図でさがす'
-  message: '手を近づけると地図が拡大します'
+  header: '手を近づけると地図が拡大します'
 
   projection = d3.geo.mercator()
     .scale 130000

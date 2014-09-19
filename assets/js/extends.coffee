@@ -98,5 +98,6 @@ $.fn.tooltip = (selector, callback)->
           else
             $.tooltip.hide()
         when 'hide'
-          $.tooltip.hide()
+          if $(@).isVisible()
+            $.tooltip.hide()
           $(@).removeClass 'hover'

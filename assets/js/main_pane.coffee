@@ -4,16 +4,33 @@ class @MainPane
     panes.push panes.current = @
 
   onResume: ->
-    $('#main-message').text @message
+    $('#main-header').text @header
+    $.tooltip.hide()
 
-  show: ->
+  show: (overlay)->
+    if overlay?
+      do @suspend
+      overlay.show()
+        .addClass 'overlay'
+      $('#main-header').text overlay.header ? ''
+      overlay.demo?()
+    else
+      do @resume
+
+  hide: ->
+    do @suspend
+
+  resume: ->
     panes.current = @
     do @onResume
     do @element.show
+    do $('#main-controller').show
     @
+    $('.overlay').hide()
 
-  hide: ->
+  suspend: ->
     do @element.hide
+    do $('#main-controller').hide
     @
 
   trigger: (type, data)->
@@ -39,6 +56,10 @@ class @MainPane
       panes.set panes.prev()
     next: ->
       panes.set panes.next()
+    show: (overlay)->
+      panes.current?.show overlay
+    resume: ->
+      panes.current?.resume()
     trigger: (type, data)->
       panes.current?.trigger type, data
   }

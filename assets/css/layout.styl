@@ -11,9 +11,9 @@ $screen-height = 720px
 
 $sidemenu-width = 100px
 
-$message-height = 48px
-$message-padding-height = 5px
-$message-outer-height = $message-height + ($message-padding-height * 2)
+$header-height = 48px
+$header-padding-height = 5px
+$header-outer-height = $header-height + ($header-padding-height * 2)
 
 $content-outer-width = $screen-width - $sidemenu-width
 $content-padding-width = 10px
@@ -25,11 +25,11 @@ $button-height = 100px
 $controller-button-width = 350px
 $controller-button-height = 80px
 
-$tooltip-width = $content-width - 50px
+$tooltip-width = $content-width - 60px
 $tooltip-height = $button-height
 $tooltip-padding-around = 10px
 $tooltip-outer-height = $tooltip-height + ($tooltip-padding-around * 2)
-$tooltip-position-left = $sidemenu-width + $content-padding-width - 50px
+$tooltip-position-left = $sidemenu-width + $content-padding-width + 20px
 $tooltip-position-top = $screen-height - $tooltip-outer-height - 20px
 
 $background-color-deep = #0e91f2
@@ -79,11 +79,12 @@ body
       border-radius 0 30px 30px 0
 
   .content
+    position relative
     margin-left $sidemenu-width
 
-  .message
-    line-height $message-height
-    height $message-height
+  header
+    line-height $header-height
+    height $header-height
     vertical-align bottom
     color #002
     padding 5px 0px 5px 40px
@@ -94,6 +95,12 @@ body
     padding 0 $content-padding-width
     background transparent
 
+  .overlay
+    display none
+    position absolute
+    width $content-width - 20px
+    top $header-height
+    left $content-padding-width
 
 .table
   display table
@@ -134,7 +141,7 @@ button
     background-color #888
 
   &:disabled
-    color: #eee
+    color #eee
     background-color #ccc
     border-color #888
 
@@ -144,6 +151,51 @@ button
     font-weight bold
     width ($content-width / 5) - 20px
     height ($content-height / 4) - 20px
+
+
+#payment
+  padding 100px 30px
+
+  #ticket_info
+    display inline-block
+    width 420px
+    height 200px
+    padding 20px
+    background-color #fffff0
+    border 1px solid #333
+    vertical-align top
+    text-align center
+
+    .detail
+      vertical-align bottom
+
+    .price
+      font-size $font-size * 1.2
+      font-weight bold
+
+  #payment_info
+    font-size $font-size * 1.2
+    display inline-block
+
+    .money-info
+      margin 0 0 80px 50px
+
+      label
+        display inline-block
+        width 5em
+
+      span.price
+        display inline-block
+        width 4em
+        text-align right
+        font-weight bold
+
+      span.unit
+        display inline-block
+        padding-left 10px
+
+    #money_change
+      color #e00
 
 #search
   header
@@ -155,9 +207,10 @@ button
     border-radius 20px
 
 #search-name
-
+  display block
 
 #search-code
+  display block
 
 #railway-map
   .pane
@@ -184,6 +237,7 @@ button
 
 #tooltip
   display none
+  position absolute
   left $tooltip-position-left
   top $tooltip-position-top
   width $tooltip-width

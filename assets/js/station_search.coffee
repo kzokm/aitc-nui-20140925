@@ -1,6 +1,6 @@
 class @StationSearch extends MainPane
   name: '駅名をさがす'
-  message: '駅名の先頭１文字または駅番号を入力してください'
+  header: '駅名の先頭１文字または駅番号を入力してください'
 
   constructor: (element)->
     super element

@@ -16,13 +16,9 @@ Leap?.loop enableGestures: true, (frame)->
     tipCursor.hide()
   else
     scenePosition = tipCursor.calibrator?.convert frontmost.stabilizedTipPosition
-    if scenePosition?
-      tipCursor.moveTo scenePosition
-        .show()
-    else
-      scenePosition = frame.leapToScene frontmost.stabilizedTipPosition
-      tipCursor.moveTo scenePosition
-        .show()
+    scenePosition ?= frame.leapToScene frontmost.stabilizedTipPosition
+    tipCursor.moveTo scenePosition
+      .show()
 
     frame.gestures.forEach (gesture)->
       if gesture.state == 'stop' && gesture.pointableIds[0] == frontmost.id
@@ -64,14 +60,13 @@ EyeTribe?.loop (frame)->
 
   if frame.state & EyeTribe.GazeData.STATE_TRACKING_EYES
     clientPosition = frame.smoothedCoordinates.toClient()
-
     gazeCursor.moveTo clientPosition
       .show()
 
     frame.clientPosition = new Point clientPosition
-    $('.gaze-receiver').each ->
+    $('.gaze-receiver:visible').each ->
       inbounds = @containsPosition clientPosition
-      $(@).toggleClass 'focus', inbounds
+      $(@).toggleClass 'gaze-focus', inbounds
       $(@).triggerHandler 'gaze', frame if inbounds
   else
     gazeCursor.hide()
@@ -141,6 +136,7 @@ class Cursor extends FloatingElement
   moveTo: (position)->
     super position
     @info.html "#{@id}: #{@x}, #{@y}<br>"
+    @
 
 class TipCursor extends Cursor
   moveTo: (position)->

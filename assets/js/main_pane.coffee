@@ -16,6 +16,9 @@ class @MainPane
     do @element.hide
     @
 
+  trigger: (type, data)->
+    if @element.isVisible()
+      @element.triggerHandler type, data
 
   panes = []
 
@@ -37,5 +40,8 @@ class @MainPane
     next: ->
       panes.set panes.next()
     trigger: (type, data)->
-      panes.current.element.triggerHandler type, data
+      panes.current?.trigger type, data
   }
+
+
+$.fn.isVisible ?= -> $.expr.filters.visible @[0]

@@ -12,6 +12,12 @@ class @StationSearch extends MainPane
         ch = NAME_CHARS[j].charAt i
         "<button disabled>#{ch}" if ch && ch != '　'
 
+    $(element).tooltip 'button', ->
+        {stations} = $(@).data()
+        stations
+          .map (s)-> s.station_name
+          .join '、'
+
     $buttons = $name.find('button')
       .each -> $(@).data 'stations', []
 
@@ -29,7 +35,6 @@ class @StationSearch extends MainPane
     ekidata.load ->
       setCompany '京急'
       setCompany '東京都交通局'
-
 
     $code = $('<article id=search-code>')
       #.appendTo(element)

@@ -182,7 +182,6 @@ $ ->
         .start tipCursor, '#prices button'
     else
       tipCursor.calibrator.stop()
-  .hide()
 
   $('#main-prev').on 'click', ->
     do $.main.prev

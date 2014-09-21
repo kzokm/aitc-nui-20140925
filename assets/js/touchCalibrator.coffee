@@ -77,6 +77,15 @@ class @TouchCalibrator
       dTip.z *= @origin.d.z
       dTip._add @origin.client
 
+
+  serialize: ->
+    if @origin?.d?
+      JSON.stringify origin: @origin
+
+  @deserialize: (json)->
+    $.extend new @, JSON.parse json if json
+
+
   start: (tipCursor, targetElement = 'button')->
     @target = $(targetElement)
       .addClass 'calibrating'

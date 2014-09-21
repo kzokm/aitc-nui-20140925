@@ -172,6 +172,7 @@ Element::containsPosition = (point)->
 $ ->
   gazeCursor = new GazeCursor 'gaze'
   tipCursor = new TipCursor 'tip'
+  tipCursor.calibrator = TouchCalibrator.deserialize localStorage?.calibrator
 
   $.tooltip = new Tooltip
 
@@ -181,7 +182,9 @@ $ ->
       tipCursor.calibrator = new TouchCalibrator()
         .start tipCursor, '#prices button'
     else
-      tipCursor.calibrator.stop()
+      json = tipCursor.calibrator.stop().serialize()
+      if json?
+        localStorage?.calibrator = json
 
   $('#main-prev').on 'click', ->
     do $.main.prev

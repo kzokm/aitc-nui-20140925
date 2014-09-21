@@ -227,11 +227,6 @@ button
   div.center
     width 930px
 
-  div.back
-    text-align center
-    button
-      width 360px
-
   button.station
     width 290px
 
@@ -269,19 +264,29 @@ button
 
 
 #main-controller
-  display table
-  margin 0 auto
+  position absolute
+  top $header-height + $content-height + 10px
+  width $content-outer-width
+
+  .table
+    margin 0 auto
+
   .raw
     display table-row
+
+.controller
+  margin 0 auto
+  text-align center
+
   button
     width $controller-button-width
     height $controller-button-height
     margin 0 10px
-    &.selected
-      background-color #f00
 
   #calibrate
     width 200px
+    &.selected
+      background-color #f00
 
 #tooltip
   display none

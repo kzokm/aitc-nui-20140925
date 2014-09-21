@@ -31,7 +31,6 @@ class @MainPane
   suspend: ->
     do $.tooltip.hide
     do @element.hide
-    do $('#main-controller').hide
     @
 
   trigger: (type, data)->

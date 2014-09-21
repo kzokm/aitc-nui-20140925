@@ -80,8 +80,9 @@ class @TouchCalibrator
   start: (tipCursor, targetElement = 'button')->
     @target = $(targetElement)
       .addClass 'calibrating'
-      .on 'calibrate', (e, tapped)->
-        console.log @, arguments
+      .on 'click', doCalibrate
+    $(document)
+      .on 'calibrate', '.calibrating', (e, tapped)->
         if tipCursor.finger?
           self.push
             tip: new Vector3D tipCursor.finger.stabilizedTipPosition
@@ -91,12 +92,15 @@ class @TouchCalibrator
 
   stop: ->
     @target.removeClass 'calibrating'
+      .off 'click', doCalibrate
+    $(document)
       .off 'calibrate'
     @
 
-$(document)
-  .on 'click', '.calibrating', (event)->
-    $(@).triggerHandler 'calibrate', event
+  doCalibrate = (event)->
+    $(@).trigger 'calibrate', event
+    event.stopPropagation()
+
 
 Math.sum ?= ->
   sum = 0

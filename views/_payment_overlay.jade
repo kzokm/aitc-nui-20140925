@@ -1,0 +1,26 @@
+article#payment.overlay
+  script(src='js/payment_overlay.js')
+
+  div#ticket_info
+    div.detail
+      div.line ◯◯鉄道
+    div
+      span.price 0
+      span.unit 円
+  div#payment_info
+    div.money-info#ticket_price
+      label 購入金額
+      span.price 0
+      snap.unit 円
+    div.money-info#money_input
+      label 投入金額
+      span.price 0
+      snap.unit 円
+    div.money-info#money_remains
+      label 不足金額
+      span.price 0
+      snap.unit 円
+    div.money-info#money_change
+      label おつり
+      span.price 0
+      snap.unit 円

@@ -1,4 +1,15 @@
-article#search
+article#station_search
   script(src='js/ekidata.js')
+  script(src='js/price_data.js')
   script(src='js/station_search.js')
-  script new StationSearch('#search')
+  script new StationSearch('#station_search')
+
+article#station_choice.overlay
+  div
+    div.left
+      button.prev.letter 前
+    div.center
+    div.right
+      button.next.letter 次
+  div.back
+    button.back 駅名検索に戻る

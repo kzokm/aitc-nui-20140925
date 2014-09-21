@@ -156,8 +156,9 @@ class @Tooltip extends FloatingElement
     super 'tooltip'
 
   show: (content)->
-    @element.html content
-    super
+    if content
+      @element.html content?() ? content
+      super
 
 
 Element::containsPosition = (point)->

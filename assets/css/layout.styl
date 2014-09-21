@@ -22,7 +22,7 @@ $content-height = 560px
 
 $button-width = 200px
 $button-height = 100px
-$controller-button-width = 350px
+$controller-button-width = 380px
 $controller-button-height = 80px
 
 $tooltip-width = $content-width - 60px
@@ -99,6 +99,7 @@ body
     display none
     position absolute
     width $content-width - 20px
+    height $content-height
     top $header-height
     left $content-padding-width
 
@@ -184,20 +185,21 @@ button
         display inline-block
         width 5em
 
-      span.price
+      .price
         display inline-block
         width 4em
         text-align right
         font-weight bold
 
-      span.unit
+      .unit
         display inline-block
         padding-left 10px
 
     #money_change
       color #e00
 
-#search
+
+#station_search
   header
     text-align center
 
@@ -206,11 +208,54 @@ button
     height 70px
     border-radius 20px
 
-#search-name
-  display block
+  #search_by_name
+    display block
 
-#search-code
-  display block
+  #search_by_number
+    display block
+
+
+#station_choice
+  padding 20px
+
+  div.left
+  div.center
+  div.right
+    display inline-block
+    vertical-align middle
+
+  div.center
+    width 930px
+
+  div.back
+    text-align center
+    button
+      width 360px
+
+  button.station
+    width 290px
+
+  button.letter
+    width 100px
+    height 300px
+    background-color transparent
+
+
+  .name
+    display block
+    margin 0 auto
+    font-weight bold
+
+  .line
+  .price
+  .unit
+    display inline-block
+    font-size 20pt
+    height 40px
+
+  .line
+    padding-right 5px
+
 
 #railway-map
   .pane
@@ -234,6 +279,9 @@ button
     margin 0 10px
     &.selected
       background-color #f00
+
+  #calibrate
+    width 200px
 
 #tooltip
   display none

@@ -2,8 +2,13 @@
 return if @pricedata?
 
 class PriceData
-  constructor: (id)->
-    @data = DATA_SOURCE[id]
+  all = []
+
+  constructor: (@code, @data)->
+    all.push @
+
+  @find: (code)->
+    all.find (e)-> e.code == code
 
   prices: ->
     $.unique @data.map (d)-> d[1]
@@ -13,9 +18,16 @@ class PriceData
     @data.filter (d)-> d[1] == price
       .map (d)-> d[0]
 
+  find: (name)->
+    @data.find (d)-> d[0] == name
 
-DATA_SOURCE =
-  keikyu: [
+@pricedata =
+  names:
+    17: '京急線'
+    18: '東京メトロ'
+    119: '都営線'
+
+  keikyu: new PriceData 17, [
     [ '泉岳寺', 450 ]
     [ '品川', 410 ]
     [ '北品川', 410 ]
@@ -88,8 +100,9 @@ DATA_SOURCE =
     [ '津久井浜', 1030 ]
     [ '三浦海岸', 1030 ]
     [ '三崎口', 1030 ]
-  ]
-  asakusa: [
+    ]
+
+  asakusa: new PriceData 119, [
     [ '三田',  570 ]
     [ '大門',  570 ]
     [ '新橋',  570 ]
@@ -102,10 +115,8 @@ DATA_SOURCE =
     [ '蔵前',  610 ]
     [ '浅草',  660 ]
     [ '本所吾妻橋',  660 ]
-    [ '押上',  660 ]
-  ]
+    [ '押上（スカイツリー前）',  660 ]
+    ]
 
-
-@pricedata =
-  keikyu: new PriceData 'keikyu'
-  asakusa: new PriceData 'asakusa'
+  find: (code)->
+    PriceData.find code

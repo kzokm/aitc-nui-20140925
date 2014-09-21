@@ -9,9 +9,13 @@ Array::find ?= (callback)->
   found
 
 # fuluentなforEach
-Array::each ?= (callback)->
-  @forEach callback
+Array::each ?= ->
+  @forEach.apply @, arguments
   @
+
+
+Number::floor ?= ->
+  Math.floor @
 
 
 # カタカナをひらがなに置換する。
@@ -55,7 +59,7 @@ $.createTable ?= (rows, columns, value)->
     for j in [0..columns - 1]
       $('<div class=cell>').appendTo $row
         .addClass("column-#{j + 1} cell-#{i + 1}-#{j + 1}")
-        .html value i, j
+        .html value? i, j
   $table
 
 
@@ -75,7 +79,7 @@ $.fn.tooltip = (selector, callback)->
   $(@)
     .on 'finger', (event, tip)->
       $selection = $(selector, @)
-      current = $selection.filter('.hover')[0]
+      current = $selection.filter('.hover:first')[0]
       if tip.touching && @containsPosition tip
         $selection.each ->
           if @containsPosition tip

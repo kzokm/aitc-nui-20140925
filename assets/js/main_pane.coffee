@@ -11,8 +11,8 @@ class @MainPane
     if overlay?
       do @suspend
       overlay.show()
-        .addClass 'overlay'
       $('#main-header').text overlay.header ? ''
+      $.tooltip.show overlay.tooltip
       overlay.demo?()
     else
       do @resume
@@ -29,6 +29,7 @@ class @MainPane
     $('.overlay').hide()
 
   suspend: ->
+    do $.tooltip.hide
     do @element.hide
     do $('#main-controller').hide
     @
@@ -60,6 +61,8 @@ class @MainPane
       panes.current?.show overlay
     resume: ->
       panes.current?.resume()
+    reset: ->
+      panes.set panes[0]
     trigger: (type, data)->
       panes.current?.trigger type, data
   }

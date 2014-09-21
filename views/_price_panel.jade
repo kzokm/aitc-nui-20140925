@@ -1,25 +1,5 @@
 article#prices
+  script(src='js/ekidata.js')
   script(src='js/price_data.js')
   script(src='js/price_panel.js')
   script new PricePanel('#prices')
-
-article#payment.overlay
-  div#ticket_info
-    div.detail
-      div 京浜急行
-    div
-      span.price 500
-      span.unit 円
-  div#payment_info
-    div.money-info#ticket_price
-      label 購入金額
-      span.price 0
-      snap.unit 円
-    div.money-info#money_input
-      label 投入金額
-      span.price 10,000
-      snap.unit 円
-    div.money-info#money_change
-      label おつり
-      span.price 0
-      snap.unit 円

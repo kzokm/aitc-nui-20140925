@@ -22,6 +22,24 @@ _datacache = {}
         @fetch 'station', (@stations)->
           callback?.call self, ekidata
 
+ekidata.load ->
+  @companies.find = (code)->
+    if typeof code == 'number'
+      Array::find.call @, (c)-> c.company_cd == code
+    else if typeof code == 'string'
+      Array::find.call @, (c)-> c.company_name_r == code
+    else
+      Array::find.apply @, arguments
+
+  @lines.find = (code)->
+    if typeof code == 'number'
+      Array::find.call @, (l)-> l.line_cd == code
+    else if typeof code == 'string'
+      Array::find.call @, (l)-> l.line_name == code
+    else
+      Array::find.apply @, arguments
+
+
 class Line
   constructor: (@code, @color = '#000')->
 

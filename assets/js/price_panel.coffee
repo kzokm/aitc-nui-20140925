@@ -9,7 +9,7 @@ class @PricePanel extends MainPane
     $.createTable rows = 4, columns = 5, (i, j)->
       price = prices[i * columns + j]
       if price?
-        $('<button>')
+        $('<button class=price>')
           .text price
           .data
             price: price
@@ -21,6 +21,7 @@ class @PricePanel extends MainPane
       .on 'click', 'button', ->
         $.main.show payment $(@).data()
         $.tooltip.show tooltip.call @
+        event.stopPropagation()
 
   tooltip = ()->
     {price, names} = $(@).data()

@@ -29,14 +29,6 @@ class @RailwayMap extends MainPane
     @map = base.append 'g'
       .attr class: 'map'
 
-    @map.append 'image'
-      .attr
-        'xlink:href': 'images/map.png'
-        x: offset.x - 1225
-        y: offset.y - 832.4
-        width: 1700 * 1.56
-        height: 960 * 1.56
-
     @lines = base.append 'g'
       .attr class: 'lines'
 
@@ -133,6 +125,25 @@ class @RailwayMap extends MainPane
           dx = dy = 0
 
   _drawMap: (id, options = {})->
+    group = @map.append 'g'
+      .attr id: id
+
+    d3.json "geodata/#{id}.json", $.proxy (error, json)->
+      group
+        .selectAll 'path'
+        .data json.features
+        .enter()
+        .append 'path'
+          .attr
+            d: path
+            class: options.class
+          .style
+            stroke: options.stroke ? '#000'
+            'stroke-width': options.stroke_width ? 1
+            fill: options.fill ? 'transparent'
+    , @
+
+  _drawJRLINE: (id, options = {})->
     group = @map.append 'g'
       .attr id: id
 
@@ -237,9 +248,6 @@ class @RailwayMap extends MainPane
 
     #@_drawMap 'chiba', stroke: '#fff', fill: '#ccc'
     #@_drawMap 'tokyo', stroke: '#fff', fill: '#ccc'
-    #@_drawMap 'chiba-coastline', stroke: '#000'
-    #@_drawMap 'tokyo-coastline', stroke: '#000'
-    #@_drawMap 'kanagawa-coastline', stroke: '#000'
     #@_drawMap 'kanagawa-river', stroke: '#008'
 
     @drawLines ekidata.metro,
@@ -251,7 +259,31 @@ class @RailwayMap extends MainPane
       station_size: 0
 
   drawAll: ->
-    @_drawMap 'N02-13_RailroadSection',
+    @_drawMap 'chiba',
+      stroke: '#fff'
+      fill: '#fffaf0'
+    @_drawMap 'tokyo',
+      stroke: '#fff'
+      fill: '#fffaf0'
+    @_drawMap 'kanagawa',
+      stroke: '#fff'
+      fill: '#fffaf0'
+    @_drawMap 'chiba-coastline',
+      stroke: '#ccc'
+    @_drawMap 'tokyo-coastline',
+      stroke: '#ccc'
+    @_drawMap 'kanagawa-coastline',
+      stroke: '#ccc'
+
+    @map.append 'image'
+      .attr
+        'xlink:href': 'images/map.png'
+        x: offset.x - 1225
+        y: offset.y - 832.4
+        width: 1700 * 1.56
+        height: 960 * 1.56
+
+    @_drawJRLINE 'N02-13_RailroadSection',
       stroke: '#888'
       stroke_width: 1
 

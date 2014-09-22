@@ -34,13 +34,14 @@ company =
     119 # 東京都交通局
     # 121 # 埼玉高速鉄道
     # 122 # いすみ鉄道
-    123 # 首都圏新都市鉄道（つくばエクスプレス）
+    # 123 # 首都圏新都市鉄道（つくばエクスプレス）
     # 124 # 横浜高速鉄道
     # 125 # ゆりかもめ
     # 127 # 山万
     # 130 # 横浜市交通局
-    131 # 横浜新都市交通
+    # 131 # 横浜新都市交通
     # 133 # 江ノ島電鉄
+    137 # 芝山鉄道
     # 138 # 小湊鐵道
     # 139 # 湘南モノレール
     # 142 # 新京成電鉄
@@ -48,7 +49,7 @@ company =
     148 # 東京モノレール
     # 149 # 東京臨海高速鉄道
     # 150 # 東葉高速鉄道
-    # 152 # 北総鉄道
+    152 # 北総鉄道
   ]
 
 station =
@@ -108,14 +109,13 @@ line.parse = ->
         (company.selected.indexOf e.company_cd) > 0
       .filter (e)->
         # line_type := 1:新幹線 2:一般 3:地下鉄 4:市電・路面電車 5:モノレール・新交通
-        e.line_type == 2 || e.line_type == 3
+        e.line_type == 2 || e.line_type == 3 || e.line_type == 5
       .each (e)->
         line.selected[e.line_cd] = e
     do station.parse
 
 station.parse = ->
   parse @csv, (data)->
-    station.selected = {}
     station.data = data
       .map (e)->
         e.station_cd = Number(e.station_cd)
@@ -135,18 +135,22 @@ station.parse = ->
 
     line.selected = {}
     station.data
+      .writeTo station.json
       .each (e)->
         line.selected[e.line_cd] = true
-      .writeTo station.json
 
+    company.selected = {}
     line.data
       .filter (e)->
         line.selected[e.line_cd]
       .writeTo line.json
       .each (e)->
+        company.selected[e.company_cd] = true
         ekidata.get "l/#{e.line_cd}.json"
 
     company.data
+      .filter (e)->
+        company.selected[e.company_cd]
       .writeTo company.json
 
 do company.parse

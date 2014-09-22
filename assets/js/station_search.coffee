@@ -71,11 +71,9 @@ class @StationSearch extends MainPane
               .append "<span class=price>#{price ? '???'}"
               .append '<span class=unit>円'
               .data
-                names: (pricedata.find line.company_cd)?.names price
                 price: price
                 station: station
                 line: line
-                company: ekidata.companies.find line.company_cd
           .end()
         .find('.prev.letter')
           .text -> prevLetter data.letter

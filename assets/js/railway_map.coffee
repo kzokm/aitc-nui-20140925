@@ -65,18 +65,28 @@ class @RailwayMap extends MainPane
 
     dx = dy = 0
 
-    $(@lines[0])
-      .on 'click', '.line', (event)->
-        console.log 'line', @, @__data__
-        event.stopPropagation()
-
     $(@stations[0])
       .tooltip '.station', ->
-        console.log 'station', data = @__data__
-        s = ekidata.stations.find data.station_cd
-        l = ekidata.lines.find s.line_cd
-        console.log l, s
-        "#{l.line_name} #{s.station_name}駅（#{s.station_name_k.kana2hira()}）"
+        console.log 'station', @__data__
+        data = $(@).data()
+        data.station ?= ekidata.stations.find @__data__.station_cd
+        data.line ?= ekidata.lines.find data.station.line_cd
+        data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?[1]
+
+        html = "#{data.line.line_name}
+        #{data.station.station_name}駅
+        （#{data.station.station_name_k.kana2hira()}）"
+        html += "#{data.station.add}"
+        if data.price
+          html += "<br>#{data.price}円"
+        html
+      .on 'click', '.station', (event)->
+        console.log 'station', @, @__data__
+        data = $(@).data()
+        data.station ?= ekidata.stations.find @__data__.station_cd
+        $.main.show new PaymentOverlay data
+        event.stopPropagation()
+
 
     $(element).on
       'mousedown touchstart': (event)->
@@ -127,10 +137,6 @@ class @RailwayMap extends MainPane
       .attr id: id
 
     d3.json "geodata/#{id}.json", $.proxy (error, json)->
-      console.log error
-      console.log json.features.length
-      console.log d3.geo.centroid json
-
       group
         .selectAll 'path'
         .data json.features.filter (d)-> d.properties.N02_004 == '東日本旅客鉄道'
@@ -252,6 +258,7 @@ class @RailwayMap extends MainPane
     @drawLines ekidata.toei,
       line_width: 3
       station_size: 3
+
     @drawLines ekidata.keikyu,
       line_width: 5
       station_size: 5

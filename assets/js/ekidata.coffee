@@ -18,34 +18,33 @@ _datacache = {}
   load: (callback, self)->
     self ?= @
     @fetch 'company', (@companies)->
+      companies.find = (code)->
+        if typeof code == 'number'
+          Array::find.call @, (c)-> c.company_cd == code
+        else if typeof code == 'string'
+          Array::find.call @, (c)-> c.company_name_r == code
+        else
+          Array::find.apply @, arguments
+
       @fetch 'line', (@lines)->
+        lines.find = (code)->
+          if typeof code == 'number'
+            Array::find.call @, (l)-> l.line_cd == code
+          else if typeof code == 'string'
+            Array::find.call @, (l)-> l.line_name == code
+          else
+            Array::find.apply @, arguments
+
         @fetch 'station', (@stations)->
+          stations.find = (code)->
+            if typeof code == 'number'
+              Array::find.call @, (s)-> s.station_cd == code
+            else if typeof code == 'string'
+              Array::find.call @, (s)-> s.station_name == code
+            else
+              Array::find.apply @, arguments
+
           callback?.call self, ekidata
-
-ekidata.load ->
-  @companies.find = (code)->
-    if typeof code == 'number'
-      Array::find.call @, (c)-> c.company_cd == code
-    else if typeof code == 'string'
-      Array::find.call @, (c)-> c.company_name_r == code
-    else
-      Array::find.apply @, arguments
-
-  @lines.find = (code)->
-    if typeof code == 'number'
-      Array::find.call @, (l)-> l.line_cd == code
-    else if typeof code == 'string'
-      Array::find.call @, (l)-> l.line_name == code
-    else
-      Array::find.apply @, arguments
-
-  @stations.find = (code)->
-    if typeof code == 'number'
-      Array::find.call @, (s)-> s.station_cd == code
-    else if typeof code == 'string'
-      Array::find.call @, (s)-> s.station_name == code
-    else
-      Array::find.apply @, arguments
 
 
 class Line

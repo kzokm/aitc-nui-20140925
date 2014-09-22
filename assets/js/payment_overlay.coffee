@@ -2,7 +2,13 @@ class @PaymentOverlay
   header: 'お金を入れて下さい。10円以下の硬貨は利用できません。'
 
   constructor: (@data)->
-    @tooltip =
+    unless data.names
+      data.line ?= ekidata.find data.station.line_cd
+      data.company ?= ekidata.companies.find data.line.company_cd
+      data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?[1]
+      data.names = (pricedata.find data.line.company_cd)?.names data.price
+
+    @tooltip = ->
       "この切符で以下の駅まで乗車できます。<br><em>#{data.names.join '、'}"
 
     @show = ->

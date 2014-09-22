@@ -39,6 +39,14 @@ ekidata.load ->
     else
       Array::find.apply @, arguments
 
+  @stations.find = (code)->
+    if typeof code == 'number'
+      Array::find.call @, (s)-> s.station_cd == code
+    else if typeof code == 'string'
+      Array::find.call @, (s)-> s.station_name == code
+    else
+      Array::find.apply @, arguments
+
 
 class Line
   constructor: (@code, @color = '#000')->
@@ -65,6 +73,9 @@ ekidata.jr = [
 ekidata.keikyu = [
     new Line 27001
     new Line 27002
+    new Line 27003
+    new Line 27004
+    new Line 27005
   ]
 
 ekidata.metro = [

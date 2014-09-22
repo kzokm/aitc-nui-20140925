@@ -2,25 +2,29 @@ class @RailwayMap extends MainPane
   name: '路線図でさがす'
   header: '手を近づけると地図が拡大します'
 
+  offset =
+    x: 500
+    y: 300
+
   projection = d3.geo.mercator()
     .scale 130000
     .center [139.65, 35.63]
-    .translate [500, 400]
+    .translate [offset.x, offset.y]
 
   path = d3.geo.path()
     .projection projection
 
+
   constructor: (element)->
     super element
 
-    svg = d3.select element
+    base = d3.select element
       .append 'svg'
       .attr
         class: 'pane'
-        width: 2000
-        height: 1000
-
-    base = svg.append 'g'
+        width: 2500
+        height: 1500
+      .append 'g'
 
     @map = base.append 'g'
       .attr class: 'map'
@@ -28,27 +32,10 @@ class @RailwayMap extends MainPane
     @map.append 'image'
       .attr
         'xlink:href': 'images/map.png'
-        x: -725
-        y: -432.4
+        x: offset.x - 1225
+        y: offset.y - 832.4
         width: 1700 * 1.56
         height: 960 * 1.56
-
-    @_drawMap 'N02-13_RailroadSection',
-      class: 'line'
-    @_drawMap 'N02-13_Station',
-      class: 'station'
-      stroke: '#080'
-      stroke_width: 3
-
-    $(@map[0]).on 'mouseover', '.station', ->
-      console.log @__data__
-
-    #@_drawMap 'chiba', stroke: '#fff', fill: '#ccc'
-    #@_drawMap 'tokyo', stroke: '#fff', fill: '#ccc'
-    #@_drawMap 'chiba-coastline', stroke: '#000'
-    #@_drawMap 'tokyo-coastline', stroke: '#000'
-    #@_drawMap 'kanagawa-coastline', stroke: '#000'
-    #@_drawMap 'kanagawa-river', stroke: '#008'
 
     @lines = base.append 'g'
       .attr class: 'lines'
@@ -56,14 +43,56 @@ class @RailwayMap extends MainPane
     @stations = base.append 'g'
       .attr class: 'stations'
 
-    @drawLines ekidata.jr, line_width: 2
-    @drawLines ekidata.keikyu, stations: false
-    @drawLines ekidata.metro, line_width: 5
-    @drawLines ekidata.toei, line_width: 3
+    do @drawAll
+
+    transform =
+      x: 0
+      y: 0
+      scale: 1
+      adjust: ->
+        @scale = Math.max 1, (Math.min 4, @scale)
+        @
+      update: (attr = {})->
+        @x = attr.x if attr.x?
+        @y = attr.y if attr.y?
+        @scale = attr.scale if attr.scale?
+        @adjust()
+        console.log @
+        base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
+        base.selectAll 'text'
+          .style 'font-size', @scale * 2
+        @
 
     dx = dy = 0
 
+    $(@lines[0])
+      .on 'click', '.line', (event)->
+        console.log 'line', @, @__data__
+        event.stopPropagation()
+
+    $(@stations[0])
+      .tooltip '.station', ->
+        console.log 'station', data = @__data__
+        s = ekidata.stations.find data.station_cd
+        l = ekidata.lines.find s.line_cd
+        console.log l, s
+        "#{l.line_name} #{s.station_name}駅（#{s.station_name_k.kana2hira()}）"
+
     $(element).on
+      'mousedown touchstart': (event)->
+        origin =
+          x: transform.x - event.clientX
+          y: transform.y - event.clientY
+        $(@)
+          .on 'mouseup mouseleave touchend touchcancel', (event)->
+            $(@).off 'mouseup mouseleave mousemove'
+          .on 'mousemove touchmove', (event)->
+            transform.update
+              x: origin.x + event.clientX
+              y: origin.y + event.clientY
+      mousewheel: (event)->
+        transform.scale += event.originalEvent.deltaY / 600
+        transform.update()
       finger: (event, tip)->
         z = tip.finger.tipPosition[2]
         if z < 0
@@ -104,7 +133,7 @@ class @RailwayMap extends MainPane
 
       group
         .selectAll 'path'
-        .data json.features
+        .data json.features.filter (d)-> d.properties.N02_004 == '東日本旅客鉄道'
         .enter()
         .append 'path'
           .attr
@@ -149,30 +178,80 @@ class @RailwayMap extends MainPane
         'stroke-width': options.line_width ? 1
         fill: 'transparent'
 
-    unless options.stations == false
-      @_drawStations line, options
+    unless options.station_size == 0
+      @_drawStation line, options
     @
 
-  _drawStations: (line, options)->
-    @stations.append 'g'
+  _drawStation: (line, options)->
+    station = @stations.append 'g'
       .attr
         class: "l_#{line.code}"
         'data-line_code': line.code
-      .selectAll 'circle'
-      .data line.data.station_l.filter (d)-> d.station_cd
+      .selectAll 'g'
+      .data line.data.station_l.filter (d)->
+        d.station_cd
       .enter()
-        .append 'circle'
+      .append 'g'
       .attr
         class: (d)->"station s_#{d.station_cd}"
-        r: 5
-        cx: (d)-> d.x
-        cy: (d)-> d.y
+        'data-line_code': line.code
         'data-station_name': (d)-> d.station_name
         'data-station_code': (d)-> d.station_code
         'data-station_group_code': (d)-> d.station_g_code
+
+    station
+      .append 'circle'
+      .attr
+        r: options.station_size ? 5
+        cx: (d)-> d.x
+        cy: (d)-> d.y
+    station
+      .append 'text'
+      .attr
+        x: (d)-> d.x + 5
+        y: (d)-> d.y + 5
+      .style
+        'font-size': 2
+      .text (d)-> d.station_name
     @
 
   drawLines: (lines, options)->
     for line in lines
       @draw line, options
     @
+
+
+  __drawAll: ->
+    @_drawMap 'N02-13_RailroadSection',
+      class: 'line'
+    @_drawMap 'N02-13_Station',
+      class: 'station'
+      stroke: '#080'
+      stroke_width: 3
+
+    #@_drawMap 'chiba', stroke: '#fff', fill: '#ccc'
+    #@_drawMap 'tokyo', stroke: '#fff', fill: '#ccc'
+    #@_drawMap 'chiba-coastline', stroke: '#000'
+    #@_drawMap 'tokyo-coastline', stroke: '#000'
+    #@_drawMap 'kanagawa-coastline', stroke: '#000'
+    #@_drawMap 'kanagawa-river', stroke: '#008'
+
+    @drawLines ekidata.metro,
+      line_width: 1
+      station_size: 0
+
+    @drawLines ekidata.jr,
+      line_width: 1
+      station_size: 0
+
+  drawAll: ->
+    @_drawMap 'N02-13_RailroadSection',
+      stroke: '#888'
+      stroke_width: 1
+
+    @drawLines ekidata.toei,
+      line_width: 3
+      station_size: 3
+    @drawLines ekidata.keikyu,
+      line_width: 5
+      station_size: 5

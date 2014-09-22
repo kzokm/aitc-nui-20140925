@@ -96,3 +96,13 @@ ekidata.toei = [
     new Line 99303, '#0079c2'
     new Line 99304, '#6cbb5a'
   ]
+
+ekidata.keisei = [
+    new Line 99340
+    new Line 23001
+    new Line 23002
+    new Line 23003
+    new Line 23004
+    new Line 23005
+    #new Line 23006
+  ]

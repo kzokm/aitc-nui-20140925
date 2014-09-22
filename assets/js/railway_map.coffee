@@ -255,6 +255,10 @@ class @RailwayMap extends MainPane
       stroke: '#888'
       stroke_width: 1
 
+    @drawLines ekidata.keisei,
+      line_width: 3
+      station_size: 3
+
     @drawLines ekidata.toei,
       line_width: 3
       station_size: 3

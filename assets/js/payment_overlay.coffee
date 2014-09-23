@@ -5,8 +5,9 @@ class @PaymentOverlay
     unless data.names
       data.line ?= ekidata.find data.station.line_cd
       data.company ?= ekidata.companies.find data.line.company_cd
-      data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?.price
-      data.names = (pricedata.find data.line.company_cd)?.names data.price
+      data.prices ?= pricedata.find data.line.company_cd
+      data.price ?= (data.prices?.find data.station.station_name)?.price
+      data.names = data.prices?.names data.price
 
     @tooltip = ->
       "この切符で以下の駅まで乗車できます。<br><em>#{data.names.join '、'}"

@@ -12,13 +12,17 @@ class PriceData
       callback?.call @, @data
     else
       d3.csv "pricedata/#{@id}.csv", $.proxy (error, @data)->
-        console.log data
         callback?.call @, data
       , @
     @
 
-  @find: (code)->
-    all.find (e)-> e.code == code
+  @find: (condition)->
+    if typeof condition == 'number'
+      all.find (e)-> e.code == condition
+    else if typeof condition == 'string'
+      all.find (e)-> e.id == condition
+    else
+      all.find condition
 
   prices: ->
     $.unique @data.map (d)-> d.price
@@ -40,5 +44,5 @@ class PriceData
   keikyu: new PriceData 'keikyu', 17
   toei: new PriceData 'toei', 119
 
-  find: (code, name)->
-    PriceData.find code
+  find: (condition)->
+    PriceData.find condition

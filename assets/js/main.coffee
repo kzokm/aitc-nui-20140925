@@ -192,7 +192,8 @@ $ ->
 
   $('#main-next').on 'click', ->
     do $.main.next
-  .trigger 'click'
 
   $('#container').on 'click', ->
     window.scrollTo 0, 0
+
+  do $.main.next

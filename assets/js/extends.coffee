@@ -72,13 +72,17 @@ $.fn.extend
 
 # ツールチップの表示
 $.fn.tooltip = (selector, callback)->
+  if typeof selector == 'function'
+    [callback, selector] = arguments
   unless typeof callback == 'function'
-    $(@).trigger 'tooltip', selector
-    return
+    return $(@).trigger 'tooltip', selector
 
   $(@)
     .on 'finger', (event, tip)->
-      $selection = $(selector, @)
+      $selection = if selector
+          $(selector, @)
+        else
+          $(@)
       current = $selection.filter('.hover:first')[0]
       if tip.touching && @containsPosition tip
         $selection.each ->
@@ -88,20 +92,23 @@ $.fn.tooltip = (selector, callback)->
               $(@).tooltip 'show'
             current = undefined
       $(current).tooltip 'hide' if current
-    .on 'mouseenter', selector, ()->
-      $(@).tooltip 'show'
-    .on 'mouseleave', selector, ()->
-      $(@).tooltip 'hide'
-    .on 'tooltip', selector, (event, command)->
-      switch command
-        when 'show'
-          message = callback.call @
-          if message
-            $(@).addClass 'hover'
-            $.tooltip.show message
-          else
-            $.tooltip.hide()
-        when 'hide'
-          if $(@).isVisible()
-            $.tooltip.hide()
-          $(@).removeClass 'hover'
+    .on
+      mouseenter: ->
+        $(@).tooltip 'show'
+      mouseleave: ->
+        $(@).tooltip 'hide'
+      tooltip: (event, command)->
+        switch command
+          when 'show'
+            message = callback.call @
+            if message
+              $(@).addClass 'hover'
+              $.tooltip.show message
+              event.stopPropagation()
+            else
+              $.tooltip.hide()
+          when 'hide'
+            if $(@).isVisible()
+              $.tooltip.hide()
+            $(@).removeClass 'hover'
+      , selector

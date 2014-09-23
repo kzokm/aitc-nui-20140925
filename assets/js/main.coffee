@@ -169,10 +169,13 @@ Element::containsPosition = (point)->
     y >= rect.top &&
     y <= rect.bottom
 
-
-$(document).on 'touchstart', (e)->
-  e.preventDefault()
-
+$(document)
+  .on 'touchmove', (e)->
+    e.preventDefault()
+  .on 'touchstart', 'button', (e)->
+    $(@).tooltip 'show'
+  .on 'touchend touchcancel', 'button', (e)->
+    $(@).tooltip 'hide'
 
 $ ->
   gazeCursor = new GazeCursor 'gaze'

@@ -37,26 +37,6 @@ class @RailwayMap extends MainPane
 
     do @drawAll
 
-    transform =
-      x: 0
-      y: 0
-      scale: 1
-      adjust: ->
-        @scale = Math.max 1, (Math.min 4, @scale)
-        @
-      update: (attr = {})->
-        @x = attr.x if attr.x?
-        @y = attr.y if attr.y?
-        @scale = attr.scale if attr.scale?
-        @adjust()
-        console.log @
-        base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
-        base.selectAll 'text'
-          .style 'font-size', @scale * 2
-        @
-
-    dx = dy = 0
-
     $(@stations[0])
       .tooltip '.station', ->
         console.log 'station', @__data__
@@ -80,18 +60,44 @@ class @RailwayMap extends MainPane
         event.stopPropagation()
 
 
+    transform =
+      x: 0
+      y: 0
+      scale: 1
+      adjust: ->
+        @scale = Math.max 1, (Math.min 4, @scale)
+        @
+      update: (attr = {})->
+        @x = attr.x if attr.x?
+        @y = attr.y if attr.y?
+        @scale = attr.scale if attr.scale?
+        @adjust()
+        console.log @
+        base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
+        base.selectAll 'text'
+          .style 'font-size', @scale * 2
+        @
+
+    dx = dy = 0
+
+
     $(element).on
       'mousedown touchstart': (event)->
+        position = event.originalEvent.targetTouches?[0] ? event
         origin =
-          x: transform.x - event.clientX
-          y: transform.y - event.clientY
+          x: transform.x - position.clientX
+          y: transform.y - position.clientY
+        console.log event.type, event, position, origin
         $(@)
           .on 'mouseup mouseleave touchend touchcancel', (event)->
+            console.log event.type, event
             $(@).off 'mouseup mouseleave mousemove'
           .on 'mousemove touchmove', (event)->
+            console.log event.type, event
+            position = event.originalEvent.targetTouches?[0] ? event
             transform.update
-              x: origin.x + event.clientX
-              y: origin.y + event.clientY
+              x: origin.x + position.clientX
+              y: origin.y + position.clientY
       mousewheel: (event)->
         transform.scale += event.originalEvent.deltaY / 600
         transform.update()

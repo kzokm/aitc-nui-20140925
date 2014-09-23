@@ -170,6 +170,10 @@ Element::containsPosition = (point)->
     y <= rect.bottom
 
 
+$(document).on 'touchstart', (e)->
+  e.preventDefault()
+
+
 $ ->
   gazeCursor = new GazeCursor 'gaze'
   tipCursor = new TipCursor 'tip'

@@ -92,9 +92,9 @@ ekidata.metro = [
 
 ekidata.toei = [
     new Line 99301, '#b6007a'
-    new Line 99302, '#e85298'
     new Line 99303, '#0079c2'
     new Line 99304, '#6cbb5a'
+    new Line 99302, '#e85298'
   ]
 
 ekidata.keisei = [

@@ -87,6 +87,7 @@ class @RailwayMap extends MainPane
         if @current.x != params.x ||
             @current.y != params.y ||
             @current.scale != params.scale
+          console.log 'update', @
           base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
           if @current.scale != params.scale
             base.selectAll 'text'
@@ -98,23 +99,26 @@ class @RailwayMap extends MainPane
     config.zoom.rate = config.zoom.rate()
 
     $svg = $('svg', element)
+    previous_touch = undefined
 
     $(element).on
       'mousedown touchstart': (event)->
         position = event.originalEvent.targetTouches?[0] ? event
-        previous =
+        console.log event.type, position
+        previous_touch =
           x: position.clientX
           y: position.clientY
-        $(@)
-          .on 'mouseup mouseleave touchend touchcancel', (event)->
-            $(@).off 'mouseup mouseleave mousemove'
-          .on 'mousemove touchmove', (event)->
-            position = event.originalEvent.targetTouches?[0] ? event
-            transform.update
-              x: transform.x + position.clientX - previous.x
-              y: transform.y + position.clientY - previous.y
-            previous.x = position.clientX
-            previous.y = position.clientY
+      'mouseleave mouseup': (event)->
+        previous_touch = undefined
+      'mousemove touchmove': (event)->
+        if previous_touch
+          position = event.originalEvent.targetTouches?[0] ? event
+          console.log event.type, position
+          transform.update
+            x: transform.x + position.clientX - previous_touch.x
+            y: transform.y + position.clientY - previous_touch.y
+          previous_touch.x = position.clientX
+          previous_touch.y = position.clientY
       mousewheel: (event)->
         transform
           .zoom

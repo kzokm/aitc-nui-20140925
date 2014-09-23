@@ -102,7 +102,8 @@ $.fn.tooltip = (selector, callback)->
           when 'show'
             message = callback.call @
             if message
-              $(@).addClass 'hover'
+              d3.select @
+                .classed 'hover', true
               $.tooltip.show message
               event.stopPropagation()
             else
@@ -110,5 +111,6 @@ $.fn.tooltip = (selector, callback)->
           when 'hide'
             if $(@).isVisible()
               $.tooltip.hide()
-            $(@).removeClass 'hover'
+            d3.select @
+              .classed 'hover', false
       , selector

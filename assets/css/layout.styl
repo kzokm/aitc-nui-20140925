@@ -4,7 +4,7 @@
   -moz-user-select none
   -webkit-user-select none
 
-$font-size = 32pt
+$font-size = 40px
 
 $screen-width = 1280px
 $screen-height = 720px
@@ -59,7 +59,7 @@ body
   .sidemenu
     float left
     width $sidemenu-width
-    font-size 16pt
+    font-size 20px
 
     img.logo
       width $sidemenu-width + 30px
@@ -234,29 +234,32 @@ button
   div.center
     width 930px
 
-  button.station
-    width 290px
-
   button.letter
     width 100px
     height 300px
     background-color transparent
 
+  button.station
+    width 290px
 
-  .name
-    display block
-    margin 0 auto
-    font-weight bold
+    .name
+      display block
+      margin 0 auto
+      font-weight bold
 
-  .line
-  .price
-  .unit
-    display inline-block
-    font-size 20pt
-    height 40px
+    .subname
+      display block
+      font-size 30px
+      line-height 10px
 
-  .line
-    padding-right 5px
+    .line
+    .price
+    .unit
+      display inline-block
+      font-size 30px
+
+    .line
+      padding-right 5px
 
 
 #railway_map
@@ -332,6 +335,6 @@ button
 #debug
   margin 10px
   background-color #eee
-  font-size 10pt
+  font-size 12px
   height 400px
   overflow scroll

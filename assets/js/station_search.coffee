@@ -70,9 +70,16 @@ class @StationSearch extends MainPane
             return unless station = data.stations[idx]
             line = ekidata.lines.find station.line_cd
             price = ((pricedata.find line.company_cd)?.find station.station_name)?.price
+            name = station.station_name
+            pSub = name.indexOf '（'
+            if pSub > 0
+              subname = name.slice pSub
+              name = name.slice 0, pSub
+            console.log name, subname
 
             $('<button class=station>')
-              .append "<span class=name>#{station.station_name}"
+              .append "<span class=name>#{name}"
+              .append "<span class=subname>#{subname ? ''}"
               .append "<span class=line style='color: ##{line.line_color_c}'>#{line.line_name}"
               .append "<span class=price>#{price ? '???'}"
               .append '<span class=unit>円'

@@ -4,7 +4,7 @@ class @RailwayMap extends MainPane
 
   offset =
     x: 500
-    y: 300
+    y: 250
 
   projection = d3.geo.mercator()
     .scale 130000
@@ -77,7 +77,6 @@ class @RailwayMap extends MainPane
       zoom: (params)->
         @set params
         ratio = @scale / @current.scale
-        console.log 'zoom', @
         @x += (@current.x - @x) * ratio
         @y += (@current.y - @y) * ratio
         @
@@ -85,11 +84,9 @@ class @RailwayMap extends MainPane
       update: (params = {})->
         params = {} if params == @
         @set params
-        console.log 'update', params, @current
         if @current.x != params.x ||
             @current.y != params.y ||
             @current.scale != params.scale
-          console.log 'transform', @
           base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
           if @current.scale != params.scale
             base.selectAll 'text'

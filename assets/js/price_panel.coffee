@@ -46,7 +46,6 @@ class @PricePanel extends MainPane
       .on 'click', $.proxy @, 'setPanel', 'keikyu'
 
   toei: ->
-     console.log @
      $('<button class="line-toei">')
       .text '都営線'
       .tooltip ->

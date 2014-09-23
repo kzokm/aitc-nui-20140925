@@ -75,7 +75,6 @@ class @StationSearch extends MainPane
             if pSub > 0
               subname = name.slice pSub
               name = name.slice 0, pSub
-            console.log name, subname
 
             $('<button class=station>')
               .append "<span class=name>#{name}"

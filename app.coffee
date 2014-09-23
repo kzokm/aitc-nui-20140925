@@ -16,6 +16,7 @@ app.use compression
 
 app.use express.static "#{__dirname}/public"
 app.use express.static "#{__dirname}/assets"
+app.use express.static "#{__dirname}/vendor/assets"
 
 app.use stylus.middleware
   src: "#{__dirname}/assets"

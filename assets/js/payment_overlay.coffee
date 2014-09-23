@@ -5,7 +5,7 @@ class @PaymentOverlay
     unless data.names
       data.line ?= ekidata.find data.station.line_cd
       data.company ?= ekidata.companies.find data.line.company_cd
-      data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?[1]
+      data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?.price
       data.names = (pricedata.find data.line.company_cd)?.names data.price
 
     @tooltip = ->
@@ -18,7 +18,7 @@ class @PaymentOverlay
       line_name = pricedata.names[data.company.company_cd]
 
       line_info = switch company_cd
-        when pricedata.asakusa.code
+        when pricedata.toei.code
           "泉岳寺接続<br>#{line_name}"
         else
           line_name

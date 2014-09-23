@@ -25,13 +25,19 @@ class @StationSearch extends MainPane
 
     ekidata.load ->
       $buttons = $name.find 'button'
+      station_exists = {}
       do (companies = ['京急', '東京都交通局'])->
         companies.forEach (name)->
           company = ekidata.companies.find name
+          prices = pricedata.find company.company_cd
           ekidata.stations
             .filter (s)->
               line = ekidata.lines.find s.line_cd
-              line.company_cd == company.company_cd
+              if line.company_cd == company.company_cd
+                (prices.find s.station_name)?.price
+            .filter (s)->
+              unless station_exists[key = s.station_g_cd]
+                station_exists[key] = true
             .forEach (s)->
               ch = s.station_name_k[0].kana2hira().unvoiced()
               data = $buttons.filter ":contains(#{ch}):first"
@@ -63,7 +69,7 @@ class @StationSearch extends MainPane
             idx = i * columns + j
             return unless station = data.stations[idx]
             line = ekidata.lines.find station.line_cd
-            price = ((pricedata.find line.company_cd)?.find station.station_name)?[1]
+            price = ((pricedata.find line.company_cd)?.find station.station_name)?.price
 
             $('<button class=station>')
               .append "<span class=name>#{station.station_name}"

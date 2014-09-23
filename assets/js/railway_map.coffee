@@ -63,7 +63,7 @@ class @RailwayMap extends MainPane
         data = $(@).data()
         data.station ?= ekidata.stations.find @__data__.station_cd
         data.line ?= ekidata.lines.find data.station.line_cd
-        data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?[1]
+        data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?.price
 
         html = "#{data.line.line_name}
         #{data.station.station_name}駅

@@ -114,7 +114,6 @@ $(document)
 #      pos = LangSelect.prototype.getMousePosition(event)
 #      LangSelect.prototype.areaCheck(pos)
 
-
 $(document)
     .on 'keydown', (event) ->
         keycode = 0
@@ -136,5 +135,5 @@ $(document)
         if keychar == "D"
             $("#dump").toggle()
 
-
-
+    .on 'click', '#lang-selector', ->
+       $.top.set '#main'

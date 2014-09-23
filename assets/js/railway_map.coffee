@@ -37,6 +37,7 @@ class @RailwayMap extends MainPane
 
     do @drawAll
 
+
     $(@stations[0])
       .tooltip '.station', ->
         console.log 'station', @__data__
@@ -64,71 +65,127 @@ class @RailwayMap extends MainPane
       x: 0
       y: 0
       scale: 1
-      adjust: ->
-        @scale = Math.max 1, (Math.min 4, @scale)
-        @
-      update: (attr = {})->
-        @x = attr.x if attr.x?
-        @y = attr.y if attr.y?
-        @scale = attr.scale if attr.scale?
-        @adjust()
-        console.log @
-        base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
-        base.selectAll 'text'
-          .style 'font-size', @scale * 2
+
+      current: {}
+
+      set: (params)->
+        @x = (params.x ?= @x)
+        @y = (params.y ?= @y)
+        params.scale ?= @scale
+        @scale = Math.max config.zoom.min, (Math.min config.zoom.max, params.scale)
+
+      zoom: (params)->
+        @set params
+        ratio = @scale / @current.scale
+        console.log 'zoom', @
+        @x += (@current.x - @x) * ratio
+        @y += (@current.y - @y) * ratio
         @
 
-    dx = dy = 0
+      update: (params = {})->
+        params = {} if params == @
+        @set params
+        console.log 'update', params, @current
+        if @current.x != params.x ||
+            @current.y != params.y ||
+            @current.scale != params.scale
+          console.log 'transform', @
+          base.attr transform: "translate(#{@x}, #{@y}) scale(#{@scale})"
+          if @current.scale != params.scale
+            base.selectAll 'text'
+              .style 'font-size', @scale * 2
+          @current = params
+        @
 
+    config.zoom.rate ?= -> (@start_z - @stop_z) / (@max - @min)
+    config.zoom.rate = config.zoom.rate()
+
+    $svg = $('svg', element)
 
     $(element).on
       'mousedown touchstart': (event)->
         position = event.originalEvent.targetTouches?[0] ? event
-        origin =
-          x: transform.x - position.clientX
-          y: transform.y - position.clientY
-        console.log event.type, event, position, origin
+        previous =
+          x: position.clientX
+          y: position.clientY
         $(@)
           .on 'mouseup mouseleave touchend touchcancel', (event)->
-            console.log event.type, event
             $(@).off 'mouseup mouseleave mousemove'
           .on 'mousemove touchmove', (event)->
-            console.log event.type, event
             position = event.originalEvent.targetTouches?[0] ? event
             transform.update
-              x: origin.x + position.clientX
-              y: origin.y + position.clientY
+              x: transform.x + position.clientX - previous.x
+              y: transform.y + position.clientY - previous.y
+            previous.x = position.clientX
+            previous.y = position.clientY
       mousewheel: (event)->
-        transform.scale += event.originalEvent.deltaY / 600
-        transform.update()
-      finger: (event, tip)->
-        z = tip.finger.tipPosition[2]
-        if z < 0
-          outbounds = !@containsPosition tip
-          scale = Math.max 1, -z / 20
-          if scale <= 5 or outbounds
-            scale = Math.min 4, scale
+        transform
+          .zoom
+            x: event.clientX
+            y: event.clientY
+            scale: transform.scale + event.originalEvent.deltaY / 600
+          .update()
 
-            rect = @getBoundingClientRect()
+      finger: (event, tip)->
+        z = config.zoom.start_z - tip.finger.tipPosition[2]
+        if z > 0
+          outbounds = !$svg[0].containsPosition tip
+          scale = z / config.zoom.rate + config.zoom.min
+          if scale <= config.zoom.max or outbounds
+            rect = $svg[0].getBoundingClientRect()
             x = tip.x - rect.left
             y = tip.y - rect.top
 
-            if outbounds
-              dx = Math.min dx, x if x < 0
-              dx = Math.max dx, x - rect.width if x > rect.width
-              dy = Math.min dy, y if y < 0
-              dy = Math.max dy, y - rect.height if y > rect.height
-              x = Math.max 0, Math.min x, rect.width
-              y = Math.max 0, Math.min y, rect.height
-            x -= (x + dx) * scale
-            y -= (y + dy) * scale
+            unless tip.previous?
+              tip.previous = x: x, y: y
+              tip.element.addClass 'zooming'
 
-            base.attr
-              transform: "translate(#{x}, #{y}) scale(#{scale})"
+            dx = dy = 0
+            do ->
+              padding = config.scroll.padding.x
+              if x < padding
+                x = padding
+                if tip.finger.tipVelocity[0] <= 0
+                  dx += config.scroll.gain
+                  dx *= 2 if x < 0
+              else if x > rect.width - padding
+                x = rect.width - padding
+                if tip.finger.tipVelocity[0] >= 0
+                  dx -= config.scroll.gain
+                  dx *= 2 if dx > rect.width
+
+              padding = config.scroll.padding.y
+              if y < padding
+                y = padding
+                if tip.finger.tipVelocity[1] >= 0
+                  dy += config.scroll.gain
+                  dy *= 2 if y < 0
+              else if y > rect.height - padding
+                y = rect.height - padding
+                if tip.finger.tipVelocity[1] <= 0
+                  dy -= config.scroll.gain
+                  dy *= 2 if y > rect.height
+
+            transform
+              .zoom
+                x: x
+                y: y
+                scale: scale
+              .update
+                x: transform.x - x + tip.previous.x + dx
+                y: transform.y - y + tip.previous.y + dy
+            tip.previous = x: x, y: y
+          else
+            endFinger tip
         else
-          base.attr
-            transform: undefined
-          dx = dy = 0
+          endFinger tip
+
+    endFinger = (tip)->
+      delete tip.previous
+      tip.element.removeClass 'zooming'
+
+    @onResume = ->
+      transform.update config.transform
 
   _drawMap: (id, options = {})->
     group = @map.append 'g'

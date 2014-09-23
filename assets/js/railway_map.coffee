@@ -40,7 +40,7 @@ class @RailwayMap extends MainPane
 
     $(@stations[0])
       .tooltip '.station', ->
-        console.log 'station', @__data__
+        console.log 'tooltip.station', @__data__
         data = $(@).data()
         data.station ?= ekidata.stations.find @__data__.station_cd
         data.line ?= ekidata.lines.find data.station.line_cd
@@ -53,8 +53,12 @@ class @RailwayMap extends MainPane
         if data.price
           html += "<br>#{data.price}円"
         html
+      .on 'touchstart', '.station', (event)->
+        console.log 'touchstart.station', @, @__data__
+      .on 'touchend', '.station', (event)->
+        console.log 'touchend.station', @, @__data__
       .on 'click', '.station', (event)->
-        console.log 'station', @, @__data__
+        console.log 'click.station', @, @__data__
         data = $(@).data()
         data.station ?= ekidata.stations.find @__data__.station_cd
         $.main.show new PaymentOverlay data
@@ -104,16 +108,17 @@ class @RailwayMap extends MainPane
     $(element).on
       'mousedown touchstart': (event)->
         position = event.originalEvent.targetTouches?[0] ? event
-        console.log event.type, position
+        console.log event.type, position.clientX, position.clientY
         previous_touch =
           x: position.clientX
           y: position.clientY
-      'mouseleave mouseup': (event)->
+      'mouseleave mouseup touchend touchcancel': (event)->
+        console.log event.type
         previous_touch = undefined
       'mousemove touchmove': (event)->
         if previous_touch
           position = event.originalEvent.targetTouches?[0] ? event
-          console.log event.type, position
+          console.log event.type, position.clientX, position.clientY
           transform.update
             x: transform.x + position.clientX - previous_touch.x
             y: transform.y + position.clientY - previous_touch.y

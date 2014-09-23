@@ -42,6 +42,7 @@ $background-color-thin = #f0f9ff
 body
   overflow hidden
   font-size $font-size
+  line-height $font-size * 0.8
 
 #container
   width $screen-width
@@ -165,6 +166,7 @@ button
 
   #ticket_info
     display inline-block
+    position relative
     width 420px
     height 200px
     padding 20px
@@ -174,11 +176,17 @@ button
     text-align center
 
     .detail
-      vertical-align bottom
+      margin-top 20px
+      line-height 42px
 
-    .price
-      font-size $font-size * 1.2
+    .price-info
+      position absolute
+      font-size $font-size * 1.4
+      line-height $font-size * 1.4
       font-weight bold
+      text-align center
+      top 140px
+      width 420px
 
   #payment_info
     font-size $font-size * 1.2

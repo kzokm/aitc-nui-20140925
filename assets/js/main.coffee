@@ -170,7 +170,7 @@ Element::containsPosition = (point)->
     y <= rect.bottom
 
 $(document)
-  .on 'touchmove', (e)->
+  .on 'touchmove contextmenu', (e)->
     e.preventDefault()
 
 $ ->

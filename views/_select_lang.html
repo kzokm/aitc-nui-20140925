@@ -1,22 +1,64 @@
 <div class="area">
-  LANG1
+  <img class="langbutton" src="images/lang0.png">
+  <ul class="loadbar" id="loadbar0">
+    <li><div class="ins" id="layerFill11"></div></li>
+    <li><div class="ins" id="layerFill12"></div></li>
+    <li><div class="ins" id="layerFill13"></div></li>
+    <li><div class="ins" id="layerFill14"></div></li>
+    <li><div class="ins" id="layerFill15"></div></li>
+    <li><div class="ins" id="layerFill16"></div></li>
+    <li><div class="ins" id="layerFill17"></div></li>
+    <li><div class="ins" id="layerFill18"></div></li>
+  </ul>
 </div>
 <div class="area">
-  LANG2
+  <img class="langbutton" src="images/lang1.png">
+  <ul class="loadbar" id="loadbar1">
+    <li><div class="ins" id="layerFill11"></div></li>
+    <li><div class="ins" id="layerFill12"></div></li>
+    <li><div class="ins" id="layerFill13"></div></li>
+    <li><div class="ins" id="layerFill14"></div></li>
+    <li><div class="ins" id="layerFill15"></div></li>
+    <li><div class="ins" id="layerFill16"></div></li>
+    <li><div class="ins" id="layerFill17"></div></li>
+    <li><div class="ins" id="layerFill18"></div></li>
+  </ul>
 </div>
 <div class="area">
-  LANG3
+  <img class="langbutton" src="images/lang2.png">
+  <ul class="loadbar" id="loadbar2">
+    <li><div class="ins" id="layerFill11"></div></li>
+    <li><div class="ins" id="layerFill12"></div></li>
+    <li><div class="ins" id="layerFill13"></div></li>
+    <li><div class="ins" id="layerFill14"></div></li>
+    <li><div class="ins" id="layerFill15"></div></li>
+    <li><div class="ins" id="layerFill16"></div></li>
+    <li><div class="ins" id="layerFill17"></div></li>
+    <li><div class="ins" id="layerFill18"></div></li>
+  </ul>
 </div>
 <div class="area">
-  LANG3
+  <img class="langbutton" src="images/lang3.png">
+  <ul class="loadbar" id="loadbar3">
+    <li><div class="ins" id="layerFill11"></div></li>
+    <li><div class="ins" id="layerFill12"></div></li>
+    <li><div class="ins" id="layerFill13"></div></li>
+    <li><div class="ins" id="layerFill14"></div></li>
+    <li><div class="ins" id="layerFill15"></div></li>
+    <li><div class="ins" id="layerFill16"></div></li>
+    <li><div class="ins" id="layerFill17"></div></li>
+    <li><div class="ins" id="layerFill18"></div></li>
+  </ul>
 </div>
 
 <script>
 $(function() {
   $.top.set('#lang-selector')
     .on({
-      gaze: function() {
-        console.log(arguments)
+      gaze: function(event, frame) {
+        if (typeof frame.clientPosition != "undefined") {
+          LangSelect.prototype.areaCheck(frame.raw)
+        }
       },
       leap: function() {
         console.log(arguments)

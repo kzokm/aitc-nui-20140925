@@ -37,8 +37,7 @@ class @RailwayMap extends MainPane
 
     do @drawAll
 
-
-    $(@stations[0])
+    $(element)
       .tooltip '.station', ->
         console.log 'tooltip.station', @__data__
         data = $(@).data()
@@ -54,9 +53,12 @@ class @RailwayMap extends MainPane
           html += "<br>#{data.price}円"
         html
       .on 'touchstart', '.station', (event)->
-        console.log 'touchstart.station', @, @__data__
+        console.log "#{event.type}.station", @, @__data__
       .on 'touchend', '.station', (event)->
-        console.log 'touchend.station', @, @__data__
+        console.log "#{event.type}.station", @, @__data__
+        unless previous_touch.moved
+          $(@).trigger 'click'
+        event.preventDefault()
       .on 'click', '.station', (event)->
         console.log 'click.station', @, @__data__
         data = $(@).data()
@@ -110,6 +112,7 @@ class @RailwayMap extends MainPane
         position = event.originalEvent.targetTouches?[0] ? event
         console.log event.type, position.clientX, position.clientY
         previous_touch =
+          moved: false
           x: position.clientX
           y: position.clientY
       'mouseleave mouseup touchend touchcancel': (event)->
@@ -122,6 +125,7 @@ class @RailwayMap extends MainPane
           transform.update
             x: transform.x + position.clientX - previous_touch.x
             y: transform.y + position.clientY - previous_touch.y
+          previous_touch.moved = true
           previous_touch.x = position.clientX
           previous_touch.y = position.clientY
       mousewheel: (event)->

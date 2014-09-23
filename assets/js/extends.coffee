@@ -93,9 +93,9 @@ $.fn.tooltip = (selector, callback)->
             current = undefined
       $(current).tooltip 'hide' if current
     .on
-      mouseenter: ->
+      'mouseenter touchstart': ->
         $(@).tooltip 'show'
-      mouseleave: ->
+      'mouseleave touchend touchcancel': ->
         $(@).tooltip 'hide'
       tooltip: (event, command)->
         switch command

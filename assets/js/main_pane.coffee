@@ -62,6 +62,7 @@ class @MainPane
       panes.current?.resume()
     reset: ->
       panes.set panes[0]
+      $.top.set '#lang-selector'
     trigger: (type, data)->
       panes.current?.trigger type, data
   }

@@ -109,7 +109,7 @@ $.fn.tooltip = (selector, callback)->
             else
               $.tooltip.hide()
           when 'hide'
-            if $(@).isVisible()
+            if $(@).isVisible() || $(@).parents('svg').isVisible()
               $.tooltip.hide()
             d3.select @
               .classed 'hover', false

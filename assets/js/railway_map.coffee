@@ -61,11 +61,28 @@ class @RailwayMap extends MainPane
         event.preventDefault()
       .on 'click', '.station', (event)->
         console.log 'click.station', @, @__data__
+        event.stopPropagation()
         data = $(@).data()
         data.station ?= ekidata.stations.find @__data__.station_cd
-        $.main.show new PaymentOverlay data
-        event.stopPropagation()
+        data.line ?= ekidata.lines.find data.station.line_cd
+        data.price ?= ((pricedata.find data.line.company_cd)?.find data.station.station_name)?.price
+        $('#station_confirm')
+          .find '.station'
+            .text data.station_name
+            .end()
+          .find '.price'
+            .text data.price
+            .end()
+          .data data
+          .show()
 
+    $ ->
+      $confirm = $('#station_confirm')
+      $('button.submit', $confirm).click ->
+        $confirm.hide()
+        $.main.show new PaymentOverlay $confirm.data()
+      $('button.cancel', $confirm).click ->
+        $confirm.hide()
 
     transform =
       x: 0
@@ -278,8 +295,7 @@ class @RailwayMap extends MainPane
         class: "l_#{line.code}"
         'data-line_code': line.code
       .selectAll 'g'
-      .data line.data.station_l.filter (d)->
-        d.station_cd
+      .data line.data.station_l.filter (d)-> d.station_cd
       .enter()
       .append 'g'
       .attr

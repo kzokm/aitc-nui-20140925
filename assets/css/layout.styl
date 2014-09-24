@@ -42,7 +42,6 @@ $background-color-thin = #f0f9ff
 body
   overflow hidden
   font-size $font-size
-  line-height $font-size * 0.8
 
 #container
   width $screen-width
@@ -103,6 +102,25 @@ body
     height $content-height
     top $header-height
     left $content-padding-width
+
+.modal
+  position absolute
+  top 0
+  left 0
+  width $screen-width
+  height $screen-height
+  text-align center
+  background-color rgba(0, 0, 0, 0.6)
+
+  .container
+    background-color #fffaf0
+    margin 100px auto
+    padding 30px
+    width: 640px
+
+    button
+      display block
+      margin 15px auto 0
 
 .table
   display table

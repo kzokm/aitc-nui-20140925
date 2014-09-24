@@ -1,3 +1,16 @@
 article#railway_map
   script(src='js/railway_map.js')
   script new RailwayMap('#railway_map')
+
+aside#station_confirm.overlay.modal
+  div.container
+    div
+      span.station 駅名
+      span までは
+      br
+      span.price 0
+      span.unit 円
+      です。
+    div.controller
+      button.submit きっぷを購入する
+      button.cancel とりけし
